@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "biomechanics",
+  "version": "${version}",
+  "name": "Bio Mechanics",
+  "description": "Meat machines!",
+  "authors": [
+    "Crupette"
+  ],
+  "contributors": [],
+  "contact": {
+    "sources": "https://github.com/Crupette/biomechanics"
+  },
+  "license": "MIT",
+  "icon": "assets/biomechanics/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.github.Crupette.biomechanics.Biomechanics"
+    ],
+    "client": [],
+    "server": []
+  },
+  "mixins": [
+    "biomechanics.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  }
+}
