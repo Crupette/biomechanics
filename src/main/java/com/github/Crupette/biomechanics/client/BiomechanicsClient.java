@@ -1,8 +1,8 @@
 package com.github.Crupette.biomechanics.client;
 
 import com.github.Crupette.biomechanics.Biomechanics;
-import com.github.Crupette.biomechanics.client.screen.BloodSqueezerScreen;
-import com.github.Crupette.biomechanics.screen.BloodSqueezerScreenHandler;
+import com.github.Crupette.biomechanics.client.screen.SqueezerScreen;
+import com.github.Crupette.biomechanics.screen.SqueezerScreenHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,8 +14,9 @@ import net.minecraft.text.TranslatableText;
 public class BiomechanicsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("blood_squeezer"), (container) -> {
-            return new BloodSqueezerScreen((BloodSqueezerScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanic.blood_squeezer"));
+
+        ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("squeezer"), (container) -> {
+            return new SqueezerScreen((SqueezerScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.squeezer"));
         });
     }
 }

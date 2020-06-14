@@ -1,51 +1,40 @@
 package com.github.Crupette.biomechanics.screen;
 
-import com.github.Crupette.biomechanics.block.entity.BloodSqueezerBlockEntity;
-import com.github.Crupette.biomechanics.tag.BiomechanicsTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.*;
 import net.minecraft.screen.*;
-import net.minecraft.screen.slot.FurnaceFuelSlot;
 import net.minecraft.screen.slot.FurnaceOutputSlot;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class BloodSqueezerScreenHandler extends ScreenHandler{
+public class SqueezerScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
+    protected final World world;
+    private final RecipeType<? extends AbstractCookingRecipe> recipeType;
 
-    public final PlayerInventory playerInventory;
+    protected SqueezerScreenHandler(int syncId, PlayerInventory playerInventory) {
+        this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(4));
+    }
 
-    public BloodSqueezerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    public SqueezerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(null, syncId);
-        checkSize(inventory, 4);
-        checkDataCount(propertyDelegate, 5);
-
+        this.recipeType = RecipeType.SMELTING;
+        checkSize(inventory, 3);
+        checkDataCount(propertyDelegate, 4);
         this.inventory = inventory;
-        this.playerInventory = playerInventory;
         this.propertyDelegate = propertyDelegate;
-        this.addProperties(propertyDelegate);
-
+        this.world = playerInventory.player.world;
         this.addSlot(new Slot(inventory, 0, 56, 17));
-        this.addSlot(new Slot(inventory, 1, 56, 53) {
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return AbstractFurnaceBlockEntity.canUseAsFuel(stack);
-            }
-        });
+        this.addSlot(new Slot(inventory, 1, 56, 53));
         this.addSlot(new Slot(inventory, 2, 133, 17) {
             @Override
             public boolean canInsert(ItemStack stack) {
@@ -64,15 +53,10 @@ public class BloodSqueezerScreenHandler extends ScreenHandler{
         for(k = 0; k < 9; ++k) {
             this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
+
+        this.addProperties(propertyDelegate);
     }
 
-    @Override
-    public void sendContentUpdates() {
-        super.sendContentUpdates();
-        System.out.println("Should be syncing properties");
-    }
-
-    @Override
     public boolean canUse(PlayerEntity player) {
         return this.inventory.canPlayerUse(player);
     }
@@ -90,7 +74,7 @@ public class BloodSqueezerScreenHandler extends ScreenHandler{
 
                 slot.onStackChanged(itemStack2, itemStack);
             } else if (index != 1 && index != 0) {
-                if (BiomechanicsTags.MEATS.values().contains(itemStack2.getItem())) {
+                if (this.isSmeltable(itemStack2)) {
                     if (!this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -98,7 +82,7 @@ public class BloodSqueezerScreenHandler extends ScreenHandler{
                     if (!this.insertItem(itemStack2, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if(itemStack2.getItem().equals(Items.GLASS_BOTTLE)){
+                }else if(itemStack2.getItem() == Items.GLASS_BOTTLE){
                     if(!this.insertItem(itemStack2, 2, 3, false)){
                         return ItemStack.EMPTY;
                     }
@@ -106,10 +90,10 @@ public class BloodSqueezerScreenHandler extends ScreenHandler{
                     if (!this.insertItem(itemStack2, 31, 40, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index >= 31 && index < 40 && !this.insertItem(itemStack2, 4, 31, false)) {
+                } else if (index >= 31 && index < 40 && !this.insertItem(itemStack2, 4, 40, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack2, 4, 40, false)) {
+            } else if (!this.insertItem(itemStack2, 3, 39, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -129,12 +113,16 @@ public class BloodSqueezerScreenHandler extends ScreenHandler{
         return itemStack;
     }
 
+    protected boolean isSmeltable(ItemStack itemStack) {
+        return this.world.getRecipeManager().getFirstMatch(this.recipeType, new SimpleInventory(new ItemStack[]{itemStack}), this.world).isPresent();
+    }
+
     protected boolean isFuel(ItemStack itemStack) {
         return AbstractFurnaceBlockEntity.canUseAsFuel(itemStack);
     }
 
     @Environment(EnvType.CLIENT)
-    public int getSqueezeProgress() {
+    public int getCookProgress() {
         int i = this.propertyDelegate.get(2);
         int j = this.propertyDelegate.get(3);
         return j != 0 && i != 0 ? i * 24 / j : 0;
@@ -146,6 +134,7 @@ public class BloodSqueezerScreenHandler extends ScreenHandler{
         if (i == 0) {
             i = 200;
         }
+
         return this.propertyDelegate.get(0) * 13 / i;
     }
 
@@ -153,7 +142,4 @@ public class BloodSqueezerScreenHandler extends ScreenHandler{
     public boolean isBurning() {
         return this.propertyDelegate.get(0) > 0;
     }
-
-    @Environment(EnvType.CLIENT)
-    public int getBloodBottles() { return this.propertyDelegate.get(4); }
 }

@@ -8,10 +8,10 @@ import net.minecraft.util.registry.Registry;
 
 public class BiomechanicsBlockEntities {
 
-    public static final BlockEntityType<BloodSqueezerBlockEntity> BLOOD_SQUEEZER =
-            BlockEntityType.Builder.create(BloodSqueezerBlockEntity::new, new Block[]{BiomechanicsBlocks.BLOOD_SQUEEZER}).build(null);
+    public static final BlockEntityType<SqueezerBlockEntity> SQUEEZER =
+            BlockEntityType.Builder.create(SqueezerBlockEntity::new, new Block[]{BiomechanicsBlocks.SQUEEZER}).build(null);
 
     public static void init(){
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("blood_squeezer"), BLOOD_SQUEEZER);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("test"), SQUEEZER);
     }
 }
