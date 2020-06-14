@@ -31,7 +31,6 @@ public class HeartItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if(!world.isClient) System.out.println("Tick");
         super.inventoryTick(stack, world, entity, slot, selected);
 
         int suffocationTicks = stack.getOrCreateTag().getInt("suffocationTicks");
@@ -90,7 +89,7 @@ public class HeartItem extends Item {
 
     @Override
     public String getTranslationKey(ItemStack stack) {
-        if(stack.getOrCreateTag().getString("customName") != null){
+        if(!stack.getOrCreateTag().getString("customName").isEmpty()){
             return stack.getOrCreateTag().getString("customName") + "'s Heart";
         }
         return super.getTranslationKey(stack) + "." + stack.getOrCreateTag().getString("entity");

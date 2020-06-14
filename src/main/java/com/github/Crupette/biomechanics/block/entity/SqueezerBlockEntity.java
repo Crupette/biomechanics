@@ -1,6 +1,7 @@
 package com.github.Crupette.biomechanics.block.entity;
 
 import com.github.Crupette.biomechanics.block.SqueezerBlock;
+import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.SqueezerScreenHandler;
 import com.github.Crupette.biomechanics.tag.BiomechanicsTags;
 import net.minecraft.block.AbstractFurnaceBlock;
@@ -42,7 +43,6 @@ public class SqueezerBlockEntity extends LockableContainerBlockEntity implements
     private int bloodBottles;
 
     protected final PropertyDelegate propertyDelegate;
-    protected final RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     public SqueezerBlockEntity() {
         super(BiomechanicsBlockEntities.SQUEEZER);
@@ -80,7 +80,6 @@ public class SqueezerBlockEntity extends LockableContainerBlockEntity implements
                 return 5;
             }
         };
-        this.recipeType = RecipeType.SMELTING;
     }
 
     private boolean isBurning() {
@@ -127,9 +126,9 @@ public class SqueezerBlockEntity extends LockableContainerBlockEntity implements
     public void tick() {
         ItemStack meatStack = this.inventory.get(0);
         boolean dirty = false;
-        boolean burning = this.burnTime > 0;
+        boolean burning = this.isBurning();
 
-        if(this.burnTime > 0){
+        if(this.isBurning()){
             this.burnTime--;
         }
 
@@ -160,7 +159,7 @@ public class SqueezerBlockEntity extends LockableContainerBlockEntity implements
                     }
                 }
 
-                if(this.burnTime > 0 && this.bloodBottles < 3){
+                if(this.isBurning() && this.bloodBottles < 3 && isMeat){
                     if(this.squeezeTime >= this.squeezeTimeTotal){
                         this.squeezeTime = 0;
                         this.squeezeTimeTotal = 200;
@@ -174,15 +173,15 @@ public class SqueezerBlockEntity extends LockableContainerBlockEntity implements
                     this.squeezeTime = 0;
                 }
             }
-            if(burning != (this.burnTime > 0)){
+            if(burning != this.isBurning()){
                 dirty = true;
-                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(SqueezerBlock.LIT, burning), 3);
+                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(SqueezerBlock.LIT, this.isBurning()), 3);
             }
 
             ItemStack bottleStack = this.inventory.get(2);
             ItemStack outputStack = this.inventory.get(3);
             if(this.bloodBottles > 0 && !bottleStack.isEmpty()){
-                ItemStack bloodBottle = new ItemStack(Items.ROTTEN_FLESH);
+                ItemStack bloodBottle = new ItemStack(BiomechanicsItems.BLOOD_BOTTLE);
                 if(outputStack.isEmpty() || (outputStack.getItem().equals(bloodBottle.getItem()) && outputStack.getCount() < outputStack.getMaxCount())){
                     dirty = true;
                     if(outputStack.isEmpty()) {

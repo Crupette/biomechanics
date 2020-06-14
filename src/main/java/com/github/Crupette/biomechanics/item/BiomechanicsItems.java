@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 public class BiomechanicsItems {
     public static Item HEART = new HeartItem(new Item.Settings().maxCount(1).group(ItemGroup.MISC));
     public static Item DECAY_STABILIZER = new RandomlyDecayingItem(new Item.Settings().maxDamage(1024).group(ItemGroup.MISC));
+    public static Item BLOOD_BOTTLE = new Item(new Item.Settings().group(ItemGroup.MISC));
 
     public static void init(){
         for(Field field : BiomechanicsItems.class.getDeclaredFields()){

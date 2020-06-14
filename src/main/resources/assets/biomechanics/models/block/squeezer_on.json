@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "minecraft:block/iron_block",
+    "front": "biomechanics:block/squeezer/front_on",
+    "side": "biomechanics:block/squeezer/side"
+  }
+}

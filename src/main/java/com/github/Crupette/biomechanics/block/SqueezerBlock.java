@@ -36,7 +36,7 @@ public class SqueezerBlock extends BlockWithEntity {
 
     protected SqueezerBlock(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(LIT, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(LIT, false));
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -49,14 +49,14 @@ public class SqueezerBlock extends BlockWithEntity {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
     }
 
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         if (itemStack.hasCustomName()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractFurnaceBlockEntity) {
-                ((AbstractFurnaceBlockEntity)blockEntity).setCustomName(itemStack.getName());
+            if (blockEntity instanceof SqueezerBlockEntity) {
+                ((SqueezerBlockEntity)blockEntity).setCustomName(itemStack.getName());
             }
         }
 
@@ -65,9 +65,8 @@ public class SqueezerBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractFurnaceBlockEntity) {
-                ItemScatterer.spawn(world, pos, (AbstractFurnaceBlockEntity)blockEntity);
-                ((AbstractFurnaceBlockEntity)blockEntity).method_27354(world, Vec3d.ofCenter(pos));
+            if (blockEntity instanceof SqueezerBlockEntity) {
+                ItemScatterer.spawn(world, pos, (SqueezerBlockEntity)blockEntity);
                 world.updateComparators(pos, this);
             }
 

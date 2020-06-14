@@ -7,14 +7,18 @@ import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.registry.Registry;
 
 import java.lang.reflect.Field;
 
 public class BiomechanicsBlocks {
 
-    public static final Block SQUEEZER = new SqueezerBlock(FabricBlockSettings.of(Material.METAL));
+    public static final Block SQUEEZER = new SqueezerBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL));
     private static final Item squeezer = new BlockItem(SQUEEZER, new Item.Settings().group(ItemGroup.DECORATIONS));
+
+    public static final Block HEART_CASE = new HeartCaseBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL));
+    private static final Item heart_case = new BlockItem(HEART_CASE, new Item.Settings().group(ItemGroup.DECORATIONS));
 
     public static void init(){
         for(Field field : BiomechanicsBlocks.class.getDeclaredFields()){

@@ -33,6 +33,8 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow public abstract boolean isUndead();
 
+    @Shadow public abstract boolean isMobOrPlayer();
+
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -40,7 +42,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "drop", at = @At("TAIL"))
     private void dropOrgans(DamageSource source, CallbackInfo ci){
         if(this.isUndead()) return;
-        if(!this.world.isClient){
+        if(!this.world.isClient && this.isMobOrPlayer()){
             ItemStack heartStack = new ItemStack(BiomechanicsItems.HEART, 1);
             CompoundTag tag = new CompoundTag();
             tag.putInt("health", (int)this.getMaxHealth());

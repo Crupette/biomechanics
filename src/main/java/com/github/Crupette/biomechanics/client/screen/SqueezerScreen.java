@@ -46,7 +46,16 @@ public class SqueezerScreen extends HandledScreen<SqueezerScreenHandler> {
             this.drawTexture(matrices, i + 56, j + 36 + 12 - l, 176, 12 - l, 14, l + 1);
         }
 
-        l = (this.handler).getCookProgress();
+        l = (this.handler).getSqueezeProgress();
         this.drawTexture(matrices, i + 79, j + 34, 176, 14, l + 1, 16);
+
+        if(this.handler.getBloodBottles() > 0) {
+            RenderSystem.color4f(1.0F, 0.0F, 0.0F, 1.F);
+            this.client.getTextureManager().bindTexture(new Identifier("textures/block/water_still.png"));
+            l = (3 - (this.handler).getBloodBottles()) * (52 / 3); //107, 17 - 52 16
+            int m = (this.handler).getBloodBottles() * (52 / 3);
+
+            this.drawTexture(matrices, i + 107, j + (52 + 16) - m, 0, 0, 16, 52 - l, 16, 512);
+        }
     }
 }
