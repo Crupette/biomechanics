@@ -2,8 +2,12 @@
   "required": true,
   "package": "com.github.Crupette.biomechanics.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
-  "client": [],
+  "mixins": [
+    "LivingEntityMixin"
+  ],
+  "client": [
+    "ItemColorsMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

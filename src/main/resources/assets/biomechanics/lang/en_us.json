@@ -1,0 +1,12 @@
+{
+    "item.biomechanics.heart.pig": "Pig heart",
+    "item.biomechanics.heart.cow": "Cow heart",
+    "item.biomechanics.heart.sheep": "Sheep heart",
+    "item.biomechanics.heart.rabbit": "Rabbit heart",
+    "item.biomechanics.heart.squid": "Squid heart",
+    "item.biomechanics.heart.creeper": "Creeper heart",
+
+    "item.biomechanics.decay_stabilizer": "Decay Stabilizer",
+
+    "tooltip.biomechanics.heart_health": "Health:"
+}

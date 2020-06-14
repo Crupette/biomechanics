@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:porkchop",
+    "minecraft:beef",
+    "minecraft:mutton",
+    "biomechanics:heart"
+  ]
+}
