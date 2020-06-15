@@ -3,7 +3,13 @@ package com.github.Crupette.biomechanics.block.entity;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.item.HeartItem;
 import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
+import com.github.Crupette.biomechanics.util.tree.GenericTree;
+import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,11 +27,20 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 
-public class HeartCaseBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable {
+public class HeartCaseBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable, Biological {
     private static final int[] TOP_SLOTS = new int[]{0, 1, 2, 3};
     private static final int[] BOTTOM_SLOTS = new int[]{4, 5};
     private static final int[] SIDE_SLOTS = new int[]{1, 2, 3};
@@ -35,9 +50,15 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     private int saturatedBottles = 0;
     private int bpm = 0;
     private int calories = 0;
+    private int oxygen = 0;
 
     private int saturatedBottlesNeeded = 1;
     private int depletedBottlesNeeded = 1;
+
+    private boolean needsTree = true;
+
+    private final List<BlockPos> connected = new ArrayList<>();
+    private final GenericTree<BlockPos> connectionTree;
 
     protected final PropertyDelegate propertyDelegate;
 
@@ -82,6 +103,8 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
                 return 6;
             }
         };
+
+        this.connectionTree = new GenericTree<>();
     }
 
     @Override
@@ -179,6 +202,10 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void tick() {
         boolean dirty = false;
+        if(this.needsTree){
+            this.needsTree = false;
+            this.buildConnectionTree();
+        }
 
         if(!world.isClient){
             ItemStack heartStack = this.inventory.get(0);
@@ -263,6 +290,7 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
         this.depletedBottles = tag.getShort("depletedBottles");
         this.bpm = tag.getShort("bpm");
         this.calories = tag.getInt("calories");
+        this.oxygen = tag.getInt("oxygen");
     }
 
     @Override
@@ -275,7 +303,95 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
         tag.putShort("depletedBottles", (short) this.depletedBottles);
         tag.putShort("bpm", (short) this.bpm);
         tag.putInt("calories", this.calories);
+        tag.putInt("oxygen", this.oxygen);
 
         return tag;
+    }
+
+    @Override
+    public BlockPos getParent() {
+        return this.pos;
+    }
+
+    @Override
+    public int getCalorieCost() {
+        return 1;
+    }
+
+    @Override
+    public int getOxygenCost() {
+        return 2;
+    }
+
+    private GenericTreeNode<BlockPos> getNode(BlockPos pos, GenericTreeNode<BlockPos> root){
+        if(root.getData().equals(pos)) return null;
+        return this.connectionTree.find(pos);
+    }
+
+    private boolean addConnection(BlockPos pos, GenericTreeNode<BlockPos> root, BlockPos origin){
+        if(this.world == null) return false;
+        if(this.world.getBlockEntity(pos) == null) return false;
+        if(!(this.world.getBlockEntity(pos) instanceof Biological)) return false;
+
+        GenericTreeNode<BlockPos> newNode = new GenericTreeNode<>(pos);
+
+        if(this.connected.contains(pos)) return false;
+        this.connected.add(pos);
+
+        boolean connected = false;
+        System.out.println("From " + pos + ": ");
+        for(Direction direction : Direction.values()){
+            BlockPos newPos = pos.mutableCopy().add(direction.getVector());
+            System.out.println( "     to " + newPos + " (origin " + origin + ")");
+            if(origin.equals(newPos) && direction == Direction.DOWN){
+                System.out.println("Connecting back to parent at " + newPos);
+                root.addChild(newNode);
+                return true;
+            }
+            if(origin.equals(newPos)) continue;
+            if(this.connected.contains(newPos)){
+                GenericTreeNode<BlockPos> connection = getNode(newPos, root);
+                System.out.println("Checking back at " + newPos + " : " + connection);
+                printTree(0, root);
+                if(connection == null) continue;
+                System.out.println("Found pre-existing path back @ " + newPos);
+                root.addChild(newNode);
+                newNode.addChild(connection);
+                return true;
+            }
+            if(this.addConnection(newPos, newNode, origin)){
+                if(!connected){
+                    root.addChild(newNode);
+                }
+                connected = true;
+                System.out.println("Reached back for continued checks at branch " + pos);
+            }
+        }
+        return connected;
+    }
+
+    private void printTree(int depth, GenericTreeNode<BlockPos> node){
+        StringBuilder msg = new StringBuilder("");
+        for(int i = 0; i < depth; i++) msg.append(" ");
+        msg.append(node.getData().toShortString());
+        System.out.println(msg.toString());
+        node.getChildren().forEach((child) -> {
+            printTree(depth + 1, child);
+        });
+    }
+
+    public void buildConnectionTree(){
+        this.connected.clear();
+        this.connected.add(this.pos);
+        this.connectionTree.setRoot(new GenericTreeNode<>(this.pos));
+
+        if(!this.addConnection(this.pos.add(0, -1, 0), this.connectionTree.getRoot(), this.pos)){
+            System.out.println("Circulatory system is not contained!");
+            this.connected.clear();
+            this.connectionTree.setRoot(null);
+        }else{
+            System.out.println("Found loop for system");
+            printTree(0, this.connectionTree.getRoot());
+        }
     }
 }

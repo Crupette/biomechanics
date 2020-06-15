@@ -14,8 +14,12 @@ public class BiomechanicsBlockEntities {
     public static final BlockEntityType<HeartCaseBlockEntity> HEART_CASE =
             BlockEntityType.Builder.create(HeartCaseBlockEntity::new, new Block[]{BiomechanicsBlocks.HEART_CASE}).build(null);
 
+    public static final BlockEntityType<BloodVesselBlockEntity> BLOOD_VESSEL =
+            BlockEntityType.Builder.create(BloodVesselBlockEntity::new, new Block[]{BiomechanicsBlocks.BLOOD_VESSEL}).build(null);
+
     public static void init(){
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("squeezer"), SQUEEZER);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("heart_case"), HEART_CASE);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("blood_vessel"), BLOOD_VESSEL);
     }
 }

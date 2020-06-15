@@ -20,6 +20,9 @@ public class BiomechanicsBlocks {
     public static final Block HEART_CASE = new HeartCaseBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL));
     private static final Item heart_case = new BlockItem(HEART_CASE, new Item.Settings().group(ItemGroup.DECORATIONS));
 
+    public static final Block BLOOD_VESSEL = new BloodVesselBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).sounds(BlockSoundGroup.HONEY));
+    private static final Item blood_vessel = new BlockItem(BLOOD_VESSEL, new Item.Settings().group(ItemGroup.DECORATIONS));
+
     public static void init(){
         for(Field field : BiomechanicsBlocks.class.getDeclaredFields()){
             try {
