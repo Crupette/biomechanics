@@ -62,6 +62,7 @@ public abstract class LivingEntityMixin extends Entity {
             heartStack.setTag(tag);
             stomachStack.setTag(tag);
             lungsStack.setTag(tag);
+            smallIntestineStack.setTag(tag);
 
             this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getY(), this.getZ(), heartStack));
             this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getY(), this.getZ(), stomachStack));
