@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "biomechanics:block/heart_case",
+      "y": 90
+    },
+    "facing=north": {
       "model": "biomechanics:block/heart_case"
+    },
+    "facing=south": {
+      "model": "biomechanics:block/heart_case",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "biomechanics:block/heart_case",
+      "y": 270
     }
   }
 }

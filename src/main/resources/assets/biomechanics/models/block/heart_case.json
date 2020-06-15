@@ -1,6 +1,9 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "all": "biomechanics:block/heart_case/side"
+    "top": "biomechanics:block/heart_case/top",
+    "bottom": "biomechanics:block/heart_case/bottom",
+    "front": "biomechanics:block/heart_case/front",
+    "side": "biomechanics:block/heart_case/side"
   }
 }

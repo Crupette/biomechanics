@@ -1,12 +1,12 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.block.HeartCaseBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.item.HeartItem;
 import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
 import com.github.Crupette.biomechanics.util.tree.GenericTree;
 import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -14,29 +14,25 @@ import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.SuspiciousStewItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,7 +54,7 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     private boolean needsTree = true;
 
     private final List<BlockPos> connected = new ArrayList<>();
-    private final GenericTree<BlockPos> connectionTree;
+    private final GenericTree<Connection> connectionTree;
 
     protected final PropertyDelegate propertyDelegate;
 
@@ -204,7 +200,7 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
         boolean dirty = false;
         if(this.needsTree){
             this.needsTree = false;
-            this.buildConnectionTree();
+            this.updateConnectionTree();
         }
 
         if(!world.isClient){
@@ -314,6 +310,11 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
+    public void setParent(BlockPos pos) {
+
+    }
+
+    @Override
     public int getCalorieCost() {
         return 1;
     }
@@ -323,75 +324,118 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
         return 2;
     }
 
-    private GenericTreeNode<BlockPos> getNode(BlockPos pos, GenericTreeNode<BlockPos> root){
-        if(root.getData().equals(pos)) return null;
-        return this.connectionTree.find(pos);
+    private void setConnections(BlockPos to){
+        this.connected.forEach((blockPos -> {
+            BlockEntity blockEntity = this.world.getBlockEntity(blockPos);
+            if(blockEntity != null){
+                if(blockEntity instanceof Biological){
+                    ((Biological)blockEntity).setParent(to);
+                }
+            }
+        }));
     }
 
-    private boolean addConnection(BlockPos pos, GenericTreeNode<BlockPos> root, BlockPos origin){
+    private GenericTreeNode<Connection> findNode(GenericTreeNode<Connection> node, BlockPos pos, GenericTreeNode<Connection> limiter){
+        for(GenericTreeNode<Connection> child : node.getChildren()){
+            if(child.getData().pos.equals(pos)) return child;
+            GenericTreeNode<Connection> found = findNode(child, pos, limiter);
+
+            if(found != null) return found;
+        }
+        return null;
+    }
+
+    private void printTree(GenericTreeNode<Connection> node, int depth){
+        StringBuilder sb = new StringBuilder("");
+        for(int i = 0; i < depth; i++) sb.append(" ");
+        sb.append(node.getData().pos + " : " + node.getData().flow);
+        System.out.println(sb.toString());
+        for(GenericTreeNode<Connection> child : node.getChildren()){
+            printTree(child, depth + 1);
+        }
+    }
+
+    private boolean addConnection(BlockPos pos, GenericTreeNode<Connection> root, GenericTreeNode<Connection> limiter, Direction fromDir){
         if(this.world == null) return false;
-        if(this.world.getBlockEntity(pos) == null) return false;
-        if(!(this.world.getBlockEntity(pos) instanceof Biological)) return false;
+        BlockEntity check = this.world.getBlockEntity(pos);
+        if(check == null) return false;
+        if(!(check instanceof Biological)) return false;
 
-        GenericTreeNode<BlockPos> newNode = new GenericTreeNode<>(pos);
-
-        if(this.connected.contains(pos)) return false;
-        this.connected.add(pos);
+        if(((Biological)check).getParent() != null && ((Biological)check).getParent() != this.pos) return false;
 
         boolean connected = false;
-        System.out.println("From " + pos + ": ");
+        GenericTreeNode<Connection> newConnection = new GenericTreeNode<>(new Connection(pos));
+        newConnection.getData().flow.add(fromDir);
+
+        root.addChild(newConnection);
+        this.connected.add(pos);
+
         for(Direction direction : Direction.values()){
-            BlockPos newPos = pos.mutableCopy().add(direction.getVector());
-            System.out.println( "     to " + newPos + " (origin " + origin + ")");
-            if(origin.equals(newPos) && direction == Direction.DOWN){
-                System.out.println("Connecting back to parent at " + newPos);
-                root.addChild(newNode);
-                return true;
-            }
-            if(origin.equals(newPos)) continue;
-            if(this.connected.contains(newPos)){
-                GenericTreeNode<BlockPos> connection = getNode(newPos, root);
-                System.out.println("Checking back at " + newPos + " : " + connection);
-                printTree(0, root);
-                if(connection == null) continue;
-                System.out.println("Found pre-existing path back @ " + newPos);
-                root.addChild(newNode);
-                newNode.addChild(connection);
-                return true;
-            }
-            if(this.addConnection(newPos, newNode, origin)){
-                if(!connected){
-                    root.addChild(newNode);
+            BlockPos newPos = pos.add(direction.getVector());
+
+            boolean breakOut = false;
+            for(Direction flow : newConnection.getData().flow){
+                if(flow.getOpposite().equals(direction)) {
+                    breakOut = true;
+                    break;
                 }
-                connected = true;
-                System.out.println("Reached back for continued checks at branch " + pos);
             }
+            if(breakOut) {
+                continue;
+            }
+
+            if(this.pos.equals(newPos) && direction == Direction.DOWN){
+                newConnection.getData().flow.add(direction);
+                return true;
+            }
+            if(this.pos.equals(newPos)) continue;
+            if(this.findNode(this.connectionTree.getRoot(), newPos, limiter) != null) continue;
+
+            if(this.addConnection(newPos, newConnection, limiter, direction)){
+                newConnection.getData().flow.add(direction);
+                connected = true;
+                limiter = newConnection;
+            }
+        }
+
+        if(!connected){
+            this.connected.remove(pos);
+            root.removeChild(newConnection);
         }
         return connected;
     }
 
-    private void printTree(int depth, GenericTreeNode<BlockPos> node){
-        StringBuilder msg = new StringBuilder("");
-        for(int i = 0; i < depth; i++) msg.append(" ");
-        msg.append(node.getData().toShortString());
-        System.out.println(msg.toString());
-        node.getChildren().forEach((child) -> {
-            printTree(depth + 1, child);
-        });
-    }
-
-    public void buildConnectionTree(){
+    public void updateConnectionTree(){
         this.connected.clear();
         this.connected.add(this.pos);
-        this.connectionTree.setRoot(new GenericTreeNode<>(this.pos));
+        this.connectionTree.setRoot(new GenericTreeNode<>(new Connection(this.pos, Direction.DOWN)));
 
-        if(!this.addConnection(this.pos.add(0, -1, 0), this.connectionTree.getRoot(), this.pos)){
-            System.out.println("Circulatory system is not contained!");
+        if(this.addConnection(this.pos.down(), this.connectionTree.getRoot(), null, Direction.DOWN)){
+            System.out.println("System is closed");
+            this.printTree(this.connectionTree.getRoot(), 0);
+            this.setConnections(this.pos);
+        }else{
+            System.out.println("System is not closed");
             this.connected.clear();
             this.connectionTree.setRoot(null);
-        }else{
-            System.out.println("Found loop for system");
-            printTree(0, this.connectionTree.getRoot());
+        }
+    }
+
+    public void nullifyConnections() {
+        setConnections(null);
+    }
+
+    private static class Connection {
+        public BlockPos pos;
+        public List<Direction> flow = new ArrayList<>();
+
+        public Connection(BlockPos pos, Direction flow){
+            this.pos = pos;
+            this.flow.add(flow);
+        }
+
+        public Connection(BlockPos pos){
+            this.pos = pos;
         }
     }
 }

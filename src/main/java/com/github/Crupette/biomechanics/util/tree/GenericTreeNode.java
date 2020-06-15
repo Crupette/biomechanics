@@ -142,5 +142,9 @@ public class GenericTreeNode<T> {
             }
         }
     }
+
+    public void setParent(GenericTreeNode<T> parent) {
+        this.parent = parent;
+    }
 }
 

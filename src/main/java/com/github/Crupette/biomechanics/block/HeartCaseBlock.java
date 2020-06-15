@@ -12,6 +12,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -19,10 +20,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 public class HeartCaseBlock extends BlockWithEntity {
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+
     protected HeartCaseBlock(Settings settings) {
         super(settings);
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -55,10 +60,19 @@ public class HeartCaseBlock extends BlockWithEntity {
             if (blockEntity instanceof HeartCaseBlockEntity) {
                 ItemScatterer.spawn(world, pos, (HeartCaseBlockEntity)blockEntity);
                 world.updateComparators(pos, this);
+                ((HeartCaseBlockEntity)blockEntity).nullifyConnections();
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);
         }
+    }
+
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if(blockEntity instanceof HeartCaseBlockEntity){
+            ((HeartCaseBlockEntity)blockEntity).updateConnectionTree();
+        }
+        return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
     }
 
     public boolean hasComparatorOutput(BlockState state) {
@@ -67,6 +81,22 @@ public class HeartCaseBlock extends BlockWithEntity {
 
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    }
+
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+    }
+
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
+
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
     public BlockRenderType getRenderType(BlockState state) {

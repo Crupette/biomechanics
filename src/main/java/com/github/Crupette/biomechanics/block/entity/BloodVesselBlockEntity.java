@@ -17,6 +17,11 @@ public class BloodVesselBlockEntity extends BlockEntity implements Biological {
     }
 
     @Override
+    public void setParent(BlockPos pos) {
+        this.parentPos = pos;
+    }
+
+    @Override
     public int getCalorieCost() {
         return 1;
     }
