@@ -1,15 +1,11 @@
 package com.github.Crupette.biomechanics.block.entity;
 
-import com.github.Crupette.biomechanics.block.HeartCaseBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
-import com.github.Crupette.biomechanics.item.HeartItem;
 import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
 import com.github.Crupette.biomechanics.util.tree.GenericTree;
 import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,20 +13,17 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.SuspiciousStewItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,8 +41,11 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     private int calories = 0;
     private int oxygen = 0;
 
-    private int saturatedBottlesNeeded = 1;
-    private int depletedBottlesNeeded = 1;
+    private int saturatedBottlesNeeded = 0;
+    private int depletedBottlesNeeded = 0;
+
+    private int calorieCost = 0;
+    private int oxygenCost = 0;
 
     private boolean needsTree = true;
 
@@ -182,7 +178,7 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     public boolean isValid(int slot, ItemStack stack) {
         if (slot == 4 || slot == 5) {
             return false;
-        } else if(slot == 0 && stack.getItem() instanceof HeartItem){
+        } else if(slot == 0 && stack.getItem().equals(BiomechanicsItems.HEART)){
             return true;
         } else if(slot == 1 && stack.getItem() == BiomechanicsItems.DECAY_STABILIZER){
             return true;
@@ -407,18 +403,35 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
     public void updateConnectionTree(){
         this.connected.clear();
-        this.connected.add(this.pos);
         this.connectionTree.setRoot(new GenericTreeNode<>(new Connection(this.pos, Direction.DOWN)));
+
+        this.calorieCost = this.getCalorieCost();
+        this.oxygenCost = this.getOxygenCost();
+
+        this.saturatedBottlesNeeded = 1;
+        this.depletedBottlesNeeded = 1;
 
         if(this.addConnection(this.pos.down(), this.connectionTree.getRoot(), null, Direction.DOWN)){
             System.out.println("System is closed");
             this.printTree(this.connectionTree.getRoot(), 0);
             this.setConnections(this.pos);
+
+            for(BlockPos pos : this.connected){
+                Biological biological = ((Biological)this.world.getBlockEntity(pos));
+
+                this.saturatedBottlesNeeded++;
+                this.depletedBottlesNeeded++;
+                this.calorieCost += biological.getCalorieCost();
+                this.oxygenCost += biological.getOxygenCost();
+            }
         }else{
             System.out.println("System is not closed");
             this.connected.clear();
             this.connectionTree.setRoot(null);
         }
+
+        if(this.saturatedBottles > this.saturatedBottlesNeeded) this.saturatedBottles = this.saturatedBottlesNeeded;
+        if(this.depletedBottles > this.depletedBottlesNeeded) this.depletedBottles = this.depletedBottlesNeeded;
     }
 
     public void nullifyConnections() {

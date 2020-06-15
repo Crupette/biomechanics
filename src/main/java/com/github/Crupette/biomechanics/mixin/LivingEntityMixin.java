@@ -1,10 +1,7 @@
 package com.github.Crupette.biomechanics.mixin;
 
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.AbstractSkeletonEntity;
@@ -42,8 +39,18 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "drop", at = @At("TAIL"))
     private void dropOrgans(DamageSource source, CallbackInfo ci){
         if(this.isUndead()) return;
+        Entity sourceEntity = source.getSource();
+        if(!(sourceEntity instanceof PlayerEntity)){
+            return;
+        }
+        if(!((PlayerEntity) sourceEntity).getEquippedStack(EquipmentSlot.OFFHAND).getItem().equals(BiomechanicsItems.SCALPEL) &&
+                !((PlayerEntity) sourceEntity).getEquippedStack(EquipmentSlot.MAINHAND).getItem().equals(BiomechanicsItems.SCALPEL)) return;
         if(!this.world.isClient && this.isMobOrPlayer()){
             ItemStack heartStack = new ItemStack(BiomechanicsItems.HEART, 1);
+            ItemStack stomachStack = new ItemStack(BiomechanicsItems.STOMACH, 1);
+            ItemStack lungsStack = new ItemStack(BiomechanicsItems.LUNGS, 1);
+            ItemStack smallIntestineStack = new ItemStack(BiomechanicsItems.SMALL_INTESTINE, 1);
+
             CompoundTag tag = new CompoundTag();
             tag.putInt("health", (int)this.getMaxHealth());
             tag.putInt("suffocationTicks", 200);
@@ -53,8 +60,13 @@ public abstract class LivingEntityMixin extends Entity {
                 tag.putString("customName", this.getCustomName().getString());
             }
             heartStack.setTag(tag);
+            stomachStack.setTag(tag);
+            lungsStack.setTag(tag);
 
             this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getY(), this.getZ(), heartStack));
+            this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getY(), this.getZ(), stomachStack));
+            this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getY(), this.getZ(), lungsStack));
+            this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getY(), this.getZ(), smallIntestineStack));
         }
     }
 }

@@ -30,5 +30,13 @@ public abstract class ItemColorsMixin {
             int invincible = stack.getOrCreateTag().getInt("invincibleTicks");
             return invincible < 10 ? -1 : 0xFF8888;
         }, BiomechanicsItems.HEART);
+        itemColors.register((stack, tintIndex) -> {
+            int invincible = stack.getOrCreateTag().getInt("invincibleTicks");
+            return invincible < 10 ? -1 : 0xFF8888;
+        }, BiomechanicsItems.STOMACH);
+        itemColors.register((stack, tintIndex) -> {
+            int invincible = stack.getOrCreateTag().getInt("invincibleTicks");
+            return invincible < 10 ? -1 : 0xFF8888;
+        }, BiomechanicsItems.LUNGS);
     }
 }
