@@ -1,11 +1,13 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 
 public class BloodVesselBlockEntity extends BlockEntity implements Biological {
-    public BlockPos parentPos;
+    public BlockPos parent;
+    private CirculatoryNetwork network;
 
     public BloodVesselBlockEntity() {
         super(BiomechanicsBlockEntities.BLOOD_VESSEL);
@@ -13,21 +15,27 @@ public class BloodVesselBlockEntity extends BlockEntity implements Biological {
 
     @Override
     public BlockPos getParent() {
-        return this.parentPos;
+        return this.parent;
     }
 
     @Override
     public void setParent(BlockPos pos) {
-        this.parentPos = pos;
+        this.parent = pos;
+        if (pos == null) {
+            this.network = null;
+        }else {
+            this.network = ((HeartCaseBlockEntity) this.world.getBlockEntity(pos)).network;
+        }
     }
 
     @Override
-    public int getCalorieCost() {
-        return 1;
+    public int getCalorieStorageCapacity() {
+        return 256;
     }
 
     @Override
-    public int getOxygenCost() {
-        return 1;
+    public void onBeat() {
+        this.network.requestCalories(1);
+        this.network.requestOxygen(1);
     }
 }

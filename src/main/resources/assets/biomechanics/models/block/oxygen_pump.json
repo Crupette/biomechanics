@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "biomechanics:block/oxygen_pump/side",
+    "bottom": "biomechanics:block/oxygen_pump/side",
+    "side": "biomechanics:block/oxygen_pump/back",
+    "front": "biomechanics:block/oxygen_pump/front"
+  }
+}

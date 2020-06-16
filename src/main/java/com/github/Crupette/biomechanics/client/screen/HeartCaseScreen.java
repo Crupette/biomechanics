@@ -10,7 +10,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.Level;
 
 @Environment(EnvType.CLIENT)
 public class HeartCaseScreen extends HandledScreen<HeartCaseScreenHandler> {
@@ -26,13 +25,16 @@ public class HeartCaseScreen extends HandledScreen<HeartCaseScreenHandler> {
         this.drawBackground(matrices, delta, mouseX, mouseY);
         super.render(matrices, mouseX, mouseY, delta);
 
+        if(this.handler.getStacks().get(0).isEmpty()){
+            this.textRenderer.drawWithShadow(matrices, "Missing heart", this.x + 47, this.y + 39, 0xFF0000);
+        }else
         if(this.handler.getDepletedBottles() < this.handler.getDepletedBottlesNeeded() || this.handler.getSaturatedBottles() < this.handler.getSaturatedBottlesNeeded()){
             this.textRenderer.drawWithShadow(matrices, "Need blood!", this.x + 47, this.y + 39, 0xFF0000);
-        }else if(this.handler.getCalories() <= 0){
-            this.textRenderer.drawWithShadow(matrices, "Need calories!", this.x + 47, this.y + 39, 0xFFAA00);
+        }else if(this.handler.getHeartAttack()) {
+            this.textRenderer.drawWithShadow(matrices, "Cardiac arrest!", this.x + 47, this.y + 39, 0xFF0000);
         }else{
             this.textRenderer.drawWithShadow(
-                    matrices, "BPM: " + this.handler.getBPM(), this.x + 47, this.y + 39, 0xFFFFFF);
+                    matrices, "Beating normally", this.x + 47, this.y + 39, 0xFFFFFF);
         }
 
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
@@ -49,17 +51,17 @@ public class HeartCaseScreen extends HandledScreen<HeartCaseScreenHandler> {
         this.client.getTextureManager().bindTexture(new Identifier("textures/block/water_still.png"));
         if(this.handler.getSaturatedBottles() > 0){
             RenderSystem.color4f(1.0F, 0.0F, 0.0F, 1.F);
-            int l = (this.handler.getSaturatedBottlesNeeded() - (this.handler).getSaturatedBottles()) * (52 / this.handler.getSaturatedBottlesNeeded());
-            int m = (this.handler).getSaturatedBottles() * (52 / this.handler.getSaturatedBottlesNeeded());
+            int height = (int)(((float)this.handler.getSaturatedBottles() / (float)this.handler.getSaturatedBottlesNeeded()) * 52);
+            int ypos = 17 + (52 - height);
 
-            this.drawTexture(matrices, i + 134, j + (52 + 17) - m, 0, 0, 16, 52 - l, 16, 512);
+            this.drawTexture(matrices, i + 134, j + ypos, 0, 0, 16, height, 16, 512);
         }
         if(this.handler.getDepletedBottles() > 0){
             RenderSystem.color4f(0.8F, 0.0F, 0.0F, 1.F);
-            int l = (this.handler.getDepletedBottlesNeeded() - (this.handler).getDepletedBottles()) * (52 / this.handler.getDepletedBottlesNeeded());
-            int m = (this.handler).getDepletedBottles() * (52 / this.handler.getDepletedBottlesNeeded());
+            int height = (int)(((float)this.handler.getDepletedBottles() / (float)this.handler.getDepletedBottlesNeeded()) * 52);
+            int ypos = 17 + (52 - height);
 
-            this.drawTexture(matrices, i + 26, j + (52 + 17) - m, 0, 0, 16, 52 - l, 16, 512);
+            this.drawTexture(matrices, i + 26, j + ypos, 0, 0, 16, height, 16, 512);
         }
     }
 }

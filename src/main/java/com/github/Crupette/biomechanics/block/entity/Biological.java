@@ -6,6 +6,7 @@ public interface Biological {
     BlockPos getParent();
     void setParent(BlockPos pos);
 
-    int getCalorieCost();
-    int getOxygenCost();
+    int getCalorieStorageCapacity();
+
+    void onBeat();
 }

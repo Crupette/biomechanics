@@ -2,6 +2,7 @@ package com.github.Crupette.biomechanics.block.entity;
 
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
+import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
 import com.github.Crupette.biomechanics.util.tree.GenericTree;
 import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
 import net.minecraft.block.BlockState;
@@ -34,18 +35,17 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     private static final int[] BOTTOM_SLOTS = new int[]{4, 5};
     private static final int[] SIDE_SLOTS = new int[]{1, 2, 3};
     protected DefaultedList<ItemStack> inventory;
+    public CirculatoryNetwork network;
 
     private int depletedBottles = 0;
     private int saturatedBottles = 0;
-    private int bpm = 0;
-    private int calories = 0;
-    private int oxygen = 0;
+    private int heartAttackChance = 0;
+    private short beatTick = 0;
+    private boolean requestsBeat = true;
+    private boolean heartAttack = false;
 
     private int saturatedBottlesNeeded = 0;
     private int depletedBottlesNeeded = 0;
-
-    private int calorieCost = 0;
-    private int oxygenCost = 0;
 
     private boolean needsTree = true;
 
@@ -57,16 +57,15 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     public HeartCaseBlockEntity() {
         super(BiomechanicsBlockEntities.HEART_CASE);
 
-        this.inventory = DefaultedList.ofSize(6, ItemStack.EMPTY);
+        this.inventory = DefaultedList.ofSize(7, ItemStack.EMPTY);
         this.propertyDelegate = new PropertyDelegate() {
             public int get(int index) {
                 switch (index) {
                     case 0: return HeartCaseBlockEntity.this.depletedBottles;
                     case 1: return HeartCaseBlockEntity.this.saturatedBottles;
-                    case 2: return HeartCaseBlockEntity.this.bpm;
-                    case 3: return HeartCaseBlockEntity.this.calories;
-                    case 4: return HeartCaseBlockEntity.this.saturatedBottlesNeeded;
-                    case 5: return HeartCaseBlockEntity.this.depletedBottlesNeeded;
+                    case 2: return HeartCaseBlockEntity.this.heartAttack ? 1 : 0;
+                    case 3: return HeartCaseBlockEntity.this.saturatedBottlesNeeded;
+                    case 4: return HeartCaseBlockEntity.this.depletedBottlesNeeded;
                     default:
                         return 0;
                 }
@@ -78,13 +77,11 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
                         break;
                     case 1: HeartCaseBlockEntity.this.saturatedBottles = value;
                         break;
-                    case 2: HeartCaseBlockEntity.this.bpm = value;
+                    case 2: HeartCaseBlockEntity.this.heartAttack = value > 0;
                         break;
-                    case 3: HeartCaseBlockEntity.this.calories = value;
+                    case 3: HeartCaseBlockEntity.this.saturatedBottlesNeeded = value;
                         break;
-                    case 4: HeartCaseBlockEntity.this.saturatedBottlesNeeded = value;
-                        break;
-                    case 5: HeartCaseBlockEntity.this.depletedBottlesNeeded = value;
+                    case 4: HeartCaseBlockEntity.this.depletedBottlesNeeded = value;
                         break;
                 }
 
@@ -92,11 +89,12 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
             @Override
             public int size() {
-                return 6;
+                return 5;
             }
         };
 
         this.connectionTree = new GenericTree<>();
+        this.network = new CirculatoryNetwork(this);
     }
 
     @Override
@@ -191,6 +189,64 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
         this.inventory.clear();
     }
 
+    private void damageOrgan(){
+        ItemStack organStack = this.inventory.get(0);
+        if(!organStack.isEmpty()) {
+            int suffocationTicks = organStack.getOrCreateTag().getInt("suffocationTicks");
+            int invincibleTicks = organStack.getOrCreateTag().getInt("invincibleTicks");
+            int health = organStack.getOrCreateTag().getInt("health");
+
+            if(suffocationTicks > 0) {
+                suffocationTicks--;
+            }else{
+                if(invincibleTicks > 0){
+                    invincibleTicks--;
+                }else{
+                    if(!this.inventory.get(1).isEmpty()){
+                        ItemStack decayStabilizer = this.inventory.get(1);
+                        decayStabilizer.setDamage(decayStabilizer.getDamage() - 1);
+                        this.inventory.set(1, decayStabilizer);
+                    }else{
+                        this.world.playSound(null, this.pos, SoundEvents.ENTITY_PLAYER_HURT, SoundCategory.BLOCKS, 1.f, (float) ((Math.random() * 0.4f) + 0.8f));
+                        health -= 2;
+                        invincibleTicks = 20;
+                    }
+                }
+            }
+            if(health < 0) {
+                inventory.set(0, ItemStack.EMPTY);
+            }else {
+                CompoundTag tag = organStack.getTag();
+                tag.putInt("suffocationTicks", suffocationTicks);
+                tag.putInt("invincibleTicks", invincibleTicks);
+                tag.putInt("health", health);
+
+                organStack.setTag(tag);
+            }
+        }
+    }
+
+    private void healOrgan(){
+        ItemStack organStack = this.inventory.get(0);
+        if(!organStack.isEmpty()) {
+            int suffocationTicks = organStack.getOrCreateTag().getInt("suffocationTicks");
+            int invincibleTicks = organStack.getOrCreateTag().getInt("invincibleTicks");
+            int health = organStack.getOrCreateTag().getInt("health");
+
+            if((int)(Math.random() * 10) == 1)suffocationTicks++;
+            if(suffocationTicks > 20){
+                suffocationTicks = 20;
+            }
+
+            CompoundTag tag = organStack.getTag();
+            tag.putInt("suffocationTicks", suffocationTicks);
+            tag.putInt("invincibleTicks", invincibleTicks);
+            tag.putInt("health", health);
+
+            organStack.setTag(tag);
+        }
+    }
+
     @Override
     public void tick() {
         boolean dirty = false;
@@ -201,40 +257,53 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
         if(!world.isClient){
             ItemStack heartStack = this.inventory.get(0);
+
             if(!heartStack.isEmpty()) {
-                if (this.saturatedBottles < this.saturatedBottlesNeeded || this.depletedBottles < this.depletedBottlesNeeded || this.calories == 0) {
-                    int suffocationTicks = heartStack.getOrCreateTag().getInt("suffocationTicks");
-                    int invincibleTicks = heartStack.getOrCreateTag().getInt("invincibleTicks");
-                    int health = heartStack.getOrCreateTag().getInt("health");
+                ItemStack organStack = this.inventory.get(0);
 
-                    if(suffocationTicks > 0) {
-                        suffocationTicks--;
-                    }else{
-                        if(invincibleTicks > 0){
-                            invincibleTicks--;
-                        }else{
-                            if(!this.inventory.get(1).isEmpty()){
-                                ItemStack decayStabilizer = this.inventory.get(1);
-                                decayStabilizer.setDamage(decayStabilizer.getDamage() - 1);
-                                this.inventory.set(1, decayStabilizer);
-                            }else{
-                                this.world.playSound(null, this.pos, SoundEvents.ENTITY_PLAYER_HURT, SoundCategory.BLOCKS, 1.f, (float) ((Math.random() * 0.4f) + 0.8f));
-                                health -= 2;
-                                invincibleTicks = 20;
-                            }
-                        }
-                    }
-                    if(health < 0) {
-                        inventory.set(0, ItemStack.EMPTY);
-                    }else {
-                        CompoundTag tag = heartStack.getTag();
-                        tag.putInt("suffocationTicks", suffocationTicks);
-                        tag.putInt("invincibleTicks", invincibleTicks);
-                        tag.putInt("health", health);
+                int heartHealth = organStack.getOrCreateTag().getInt("health");
 
-                        heartStack.setTag(tag);
+                int sustainOxygen = this.network.requestOxygen(1);
+                int sustainCalories = this.network.requestOxygen(1);
+                if (this.saturatedBottles < this.saturatedBottlesNeeded || this.depletedBottles < this.depletedBottlesNeeded ||
+                sustainOxygen < 1 || sustainCalories < 1) {
+                    damageOrgan();
+                }else{
+                    healOrgan();
+                }
+
+                if(this.beatTick > 0) {
+                    this.beatTick--;
+                    if(this.beatTick == 0){
+                        this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.4f, 1.3f);
                     }
                 }
+
+                if(this.requestsBeat && !this.heartAttack){
+                    sustainOxygen = this.network.requestOxygen(4);
+                    sustainCalories = this.network.requestCalories(2);
+                    this.requestsBeat = false;
+
+                    if(sustainCalories >= 4 && sustainOxygen >= 2) {
+                        if(this.beatTick > heartHealth){
+                            this.heartAttack = true;
+                        }else {
+                            this.network.onBeat(heartHealth);
+                            this.beatTick = (short) (heartHealth / 2);
+                            this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.4f, 0.5f);
+                        }
+                    }else{
+                        if(this.beatTick > heartHealth){
+                            this.heartAttack = true;
+                        }else {
+                            this.network.onBeat(heartHealth);
+                            this.beatTick += (short) (heartHealth / 2) + (4 - sustainOxygen) + (2 - sustainCalories);
+                            this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.6f, 0.5f);
+                        }
+                    }
+                }
+            }else{
+                this.heartAttack = false;
             }
 
             for(int slot = 2; slot < 4; slot++){
@@ -244,10 +313,12 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
                         ItemStack outputStack = this.inventory.get(slot == 2 ? 4 : 5);
                         if(outputStack.isEmpty() || (outputStack.getItem() == Items.GLASS_BOTTLE && outputStack.getCount() < outputStack.getMaxCount())) {
                             int outSlot = slot + 2;
-                            int fluidCount = slot == 2 ? this.saturatedBottles : this.depletedBottles;
-                            int fluidNeeded = slot == 2 ? this.saturatedBottlesNeeded : this.depletedBottlesNeeded;
+                            int fluidCount = slot == 3 ? this.saturatedBottles : this.depletedBottles;
+                            int fluidNeeded = slot == 3 ? this.saturatedBottlesNeeded : this.depletedBottlesNeeded;
 
                             if(fluidCount < fluidNeeded){
+                                this.network.provideCalories(100);
+                                this.network.provideOxygen(100);
                                 fluidCount++;
                                 bottleSlot.decrement(1);
                                 if(outputStack.isEmpty()){
@@ -259,8 +330,8 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
                                 dirty = true;
                             }
 
-                            if(slot == 2) this.saturatedBottles = fluidCount;
-                            if(slot == 3) this.depletedBottles = fluidCount;
+                            if(slot == 3) this.saturatedBottles = fluidCount;
+                            if(slot == 2) this.depletedBottles = fluidCount;
                         }
                     }
                 }
@@ -271,6 +342,8 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
         }
     }
 
+    public void requestBeat() { this.requestsBeat = true; }
+
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
@@ -280,9 +353,10 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
         this.saturatedBottles = tag.getShort("saturatedBottles");
         this.depletedBottles = tag.getShort("depletedBottles");
-        this.bpm = tag.getShort("bpm");
-        this.calories = tag.getInt("calories");
-        this.oxygen = tag.getInt("oxygen");
+        this.requestsBeat = tag.getBoolean("needsBeat");
+        this.beatTick = tag.getShort("beatTick");
+
+        this.network.fromTag(tag);
     }
 
     @Override
@@ -293,9 +367,10 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
         tag.putShort("saturatedBottles", (short) this.saturatedBottles);
         tag.putShort("depletedBottles", (short) this.depletedBottles);
-        tag.putShort("bpm", (short) this.bpm);
-        tag.putInt("calories", this.calories);
-        tag.putInt("oxygen", this.oxygen);
+        tag.putBoolean("needsBeat", this.requestsBeat);
+        tag.putShort("beatTick", this.beatTick);
+
+        this.network.toTag(tag);
 
         return tag;
     }
@@ -307,17 +382,16 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public void setParent(BlockPos pos) {
-
     }
 
     @Override
-    public int getCalorieCost() {
-        return 1;
+    public int getCalorieStorageCapacity() {
+        return 8192;
     }
 
     @Override
-    public int getOxygenCost() {
-        return 2;
+    public void onBeat() {
+
     }
 
     private void setConnections(BlockPos to){
@@ -403,26 +477,21 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
     public void updateConnectionTree(){
         this.connected.clear();
+        this.network.reset();
         this.connectionTree.setRoot(new GenericTreeNode<>(new Connection(this.pos, Direction.DOWN)));
-
-        this.calorieCost = this.getCalorieCost();
-        this.oxygenCost = this.getOxygenCost();
 
         this.saturatedBottlesNeeded = 1;
         this.depletedBottlesNeeded = 1;
 
         if(this.addConnection(this.pos.down(), this.connectionTree.getRoot(), null, Direction.DOWN)){
             System.out.println("System is closed");
-            this.printTree(this.connectionTree.getRoot(), 0);
             this.setConnections(this.pos);
 
             for(BlockPos pos : this.connected){
-                Biological biological = ((Biological)this.world.getBlockEntity(pos));
-
                 this.saturatedBottlesNeeded++;
                 this.depletedBottlesNeeded++;
-                this.calorieCost += biological.getCalorieCost();
-                this.oxygenCost += biological.getOxygenCost();
+
+                this.network.addChild(this.world.getBlockEntity(pos));
             }
         }else{
             System.out.println("System is not closed");
