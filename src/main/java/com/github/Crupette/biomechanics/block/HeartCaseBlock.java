@@ -22,12 +22,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class HeartCaseBlock extends BlockWithEntity {
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-
+public class HeartCaseBlock extends FacingWithEntity {
     protected HeartCaseBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -73,33 +70,5 @@ public class HeartCaseBlock extends BlockWithEntity {
             ((HeartCaseBlockEntity)blockEntity).updateConnectionTree();
         }
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-    }
-
-    public boolean hasComparatorOutput(BlockState state) {
-        return true;
-    }
-
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
-    }
-
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
-    }
-
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
-
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
-
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
-
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 }

@@ -1,22 +1,20 @@
 package com.github.Crupette.biomechanics.screen;
 
+import com.github.Crupette.biomechanics.block.entity.DigestorBlockEntity;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
-import com.github.Crupette.biomechanics.tag.BiomechanicsTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.FurnaceOutputSlot;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
 
-public class OxygenPumpScreenHandler extends ScreenHandler {
+public class DigestorScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
     protected final World world;
@@ -26,20 +24,32 @@ public class OxygenPumpScreenHandler extends ScreenHandler {
     private final int hotbarStart;
     private final int hotbarEnd;
 
-    public OxygenPumpScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    public DigestorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(null, syncId);
-        checkSize(inventory, 2);
-        checkDataCount(propertyDelegate, 3);
+        checkSize(inventory, 4);
+        checkDataCount(propertyDelegate, 9);
         this.inventory = inventory;
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.world;
-        this.addSlot(new Slot(inventory, 0, 80, 17) {
+        this.addSlot(new Slot(inventory, 0, 80, 15) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return super.canInsert(stack) && stack.getItem() == BiomechanicsItems.LUNGS;
+                return super.canInsert(stack) && stack.getItem().isFood();
             }
         });
-        this.addSlot(new Slot(inventory, 1, 80, 53) {
+        this.addSlot(new Slot(inventory, 1, 80, 35) {
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                return super.canInsert(stack) && stack.getItem() == BiomechanicsItems.STOMACH;
+            }
+        });
+        this.addSlot(new Slot(inventory, 2, 80, 55) {
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                return super.canInsert(stack) && stack.getItem() == BiomechanicsItems.SMALL_INTESTINE;
+            }
+        });
+        this.addSlot(new Slot(inventory, 3, 44, 35) {
             @Override
             public boolean canInsert(ItemStack stack) {
                 return super.canInsert(stack) && stack.getItem() == BiomechanicsItems.DECAY_STABILIZER;
@@ -79,13 +89,20 @@ public class OxygenPumpScreenHandler extends ScreenHandler {
 
                 slot.onStackChanged(itemStack2, itemStack);
             } else if (index != 0 && index != 1 && index != 2) {
-                if (itemStack2.getItem() == BiomechanicsItems.LUNGS) {
-                    System.out.println(itemStack2.getItem() + " : " + BiomechanicsItems.LUNGS);
+                if (itemStack2.getItem().isFood()) {
                     if (!this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (itemStack2.getItem().equals(BiomechanicsItems.DECAY_STABILIZER)) {
+                } else if (itemStack2.getItem().equals(BiomechanicsItems.STOMACH)) {
                     if (!this.insertItem(itemStack2, 1, 2, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (itemStack2.getItem().equals(BiomechanicsItems.SMALL_INTESTINE)) {
+                    if (!this.insertItem(itemStack2, 2, 3, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (itemStack2.getItem().equals(BiomechanicsItems.DECAY_STABILIZER)) {
+                    if (!this.insertItem(itemStack2, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (index >= this.inventoryStart && index < this.inventoryEnd) {
@@ -115,7 +132,48 @@ public class OxygenPumpScreenHandler extends ScreenHandler {
         return itemStack;
     }
 
-    public int getOxygenStored() { return this.propertyDelegate.get(0); }
-    public int getOxygenMax() { return this.propertyDelegate.get(1); }
-    public int getBreathDelay() { return this.propertyDelegate.get(2); }
+    @Environment(EnvType.CLIENT)
+    public int getStoredCalories() {
+        return this.propertyDelegate.get(0);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getStoredMaximum() {
+        return this.propertyDelegate.get(1);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getProcessingCalories() {
+        return this.propertyDelegate.get(2);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getProcessingMaximum() {
+        return this.propertyDelegate.get(3);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getNetworkCalories() {
+        return this.propertyDelegate.get(4);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getNetworkCaloriesStorage() {
+        return this.propertyDelegate.get(5);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getNetworkCaloriesOverflow() {
+        return this.propertyDelegate.get(6);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getNetworkBloodCalories() {
+        return this.propertyDelegate.get(7);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getNetworkHeartHealth() {
+        return this.propertyDelegate.get(8);
+    }
 }

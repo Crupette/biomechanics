@@ -1,21 +1,15 @@
 package com.github.Crupette.biomechanics.block.entity;
 
-import com.github.Crupette.biomechanics.block.HeartCaseBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
-import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
-import com.github.Crupette.biomechanics.screen.OxygenPumpScreenHandler;
+import com.github.Crupette.biomechanics.screen.DigestorScreenHandler;
 import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
-import com.github.Crupette.biomechanics.util.tree.GenericTree;
-import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -28,64 +22,82 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable, Biological{
-    private static final int[] TOP_SLOTS = new int[]{0, 1};
-    private static final int[] SIDE_SLOTS = new int[]{0, 1};
+public class DigestorBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable, Biological{
+    private static final int[] TOP_SLOTS = new int[]{0, 1, 2, 3};
+    private static final int[] SIDE_SLOTS = new int[]{0, 1, 2, 3};
     protected DefaultedList<ItemStack> inventory;
 
     protected final PropertyDelegate propertyDelegate;
     private BlockPos parent;
-    private boolean needsBreath;
 
-    private int breathDelay;
-    private int storedOxygen;
-    private int storedOxygenMax = 1;
+    private int storedCalories;
+    private int storedMaximum;
+
+    private int processingCalories;
+    private int processingMaximum;
 
     private CirculatoryNetwork network;
 
-    public OxygenPumpBlockEntity() {
-        super(BiomechanicsBlockEntities.OXYGEN_PUMP);
+    public DigestorBlockEntity() {
+        super(BiomechanicsBlockEntities.DIGESTOR);
 
-        this.inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
+        this.inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
         this.propertyDelegate = new PropertyDelegate() {
             public int get(int index) {
                 switch (index){
-                    case 0: return OxygenPumpBlockEntity.this.storedOxygen;
-                    case 1: return OxygenPumpBlockEntity.this.storedOxygenMax;
-                    case 2: return OxygenPumpBlockEntity.this.breathDelay;
+                    case 0: return DigestorBlockEntity.this.storedCalories;
+                    case 1: return DigestorBlockEntity.this.storedMaximum;
+                    case 2: return DigestorBlockEntity.this.processingCalories;
+                    case 3: return DigestorBlockEntity.this.processingMaximum;
+                    case 4: return DigestorBlockEntity.this.network.getCalorieStorage();
+                    case 5: return DigestorBlockEntity.this.network.getCalorieStorageCapacity();
+                    case 6: return DigestorBlockEntity.this.network.getCalorieOverflow();
+                    case 7: return DigestorBlockEntity.this.network.getBloodCalories();
+                    case 8: return DigestorBlockEntity.this.network.getHeartHealth();
                     default: return 0;
                 }
             }
 
             public void set(int index, int value) {
                 switch (index){
-                    case 0: OxygenPumpBlockEntity.this.storedOxygen = value;
-                    break;
-                    case 1: OxygenPumpBlockEntity.this.storedOxygenMax = value;
-                    break;
-                    case 2: OxygenPumpBlockEntity.this.breathDelay = value;
+                    case 0: DigestorBlockEntity.this.storedCalories = value;
+                        break;
+                    case 1: DigestorBlockEntity.this.storedMaximum = value;
+                        break;
+                    case 2: DigestorBlockEntity.this.processingCalories = value;
+                        break;
+                    case 3: DigestorBlockEntity.this.processingMaximum = value;
+                        break;
+                    case 4: DigestorBlockEntity.this.network.setCalorieStorage(value);
+                        break;
+                    case 5: DigestorBlockEntity.this.network.setCalorieStorageCapacity(value);
+                        break;
+                    case 6: DigestorBlockEntity.this.network.setCalorieOverflow(value);
+                        break;
+                    case 7: DigestorBlockEntity.this.network.setBloodCalories(value);
+                        break;
+                    case 8: DigestorBlockEntity.this.network.setHeartHealth(value);
+
                 }
             }
 
             @Override
             public int size() {
-                return 3;
+                return 9;
             }
         };
     }
 
     @Override
     protected Text getContainerName() {
-        return new TranslatableText("container.biomechanics.oxygen_pump");
+        return new TranslatableText("container.biomechanics.digestor");
     }
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new OxygenPumpScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+        return new DigestorScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
 
     @Override
@@ -154,8 +166,10 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
     }
 
     public boolean isValid(int slot, ItemStack stack) {
-        if(slot == 1 && stack.getItem() == BiomechanicsItems.DECAY_STABILIZER) return true;
-        if(slot == 0 && stack.getItem() == BiomechanicsItems.LUNGS) return true;
+        if(slot == 0 && stack.getItem().isFood()) return true;
+        if(slot == 1 && stack.getItem() == BiomechanicsItems.STOMACH) return true;
+        if(slot == 2 && stack.getItem() == BiomechanicsItems.SMALL_INTESTINE) return true;
+        if(slot == 3 && stack.getItem() == BiomechanicsItems.DECAY_STABILIZER) return true;
         return false;
     }
 
@@ -163,8 +177,7 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
         this.inventory.clear();
     }
 
-    private void damageOrgan(){
-        ItemStack organStack = this.inventory.get(0);
+    private void damageOrgan(ItemStack organStack){
         if(!organStack.isEmpty()) {
             int suffocationTicks = organStack.getOrCreateTag().getInt("suffocationTicks");
             int invincibleTicks = organStack.getOrCreateTag().getInt("invincibleTicks");
@@ -176,11 +189,7 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
                 if(invincibleTicks > 0){
                     invincibleTicks--;
                 }else{
-                    if(!this.inventory.get(1).isEmpty()){
-                        ItemStack decayStabilizer = this.inventory.get(1);
-                        decayStabilizer.setDamage(decayStabilizer.getDamage() - 1);
-                        this.inventory.set(1, decayStabilizer);
-                    }else{
+                    if(this.inventory.get(3).isEmpty()){
                         this.world.playSound(null, this.pos, SoundEvents.ENTITY_PLAYER_HURT, SoundCategory.BLOCKS, 1.f, (float) ((Math.random() * 0.4f) + 0.8f));
                         health -= 2;
                         invincibleTicks = 20;
@@ -200,8 +209,7 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
         }
     }
 
-    private void healOrgan(){
-        ItemStack organStack = this.inventory.get(0);
+    private void healOrgan(ItemStack organStack){
         if(!organStack.isEmpty()) {
             int suffocationTicks = organStack.getOrCreateTag().getInt("suffocationTicks");
             int invincibleTicks = organStack.getOrCreateTag().getInt("invincibleTicks");
@@ -221,45 +229,69 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
         }
     }
 
+    private void damageOrgans(){
+        ItemStack stomach = this.inventory.get(1);
+        ItemStack smallIntestine = this.inventory.get(2);
+
+        this.damageOrgan(stomach);
+        this.damageOrgan(smallIntestine);
+    }
+
+    private void healOrgans(){
+        ItemStack stomach = this.inventory.get(1);
+        ItemStack smallIntestine = this.inventory.get(2);
+
+        this.healOrgan(stomach);
+        this.healOrgan(smallIntestine);
+    }
+
     @Override
     public void tick() {
         if(!world.isClient){
             if(this.network == null){
-                damageOrgan();
+                damageOrgans();
                 return;
             }
-            if(this.breathDelay > 0) {
-                this.breathDelay--;
-            }
 
-            ItemStack organStack = this.inventory.get(0);
-            if(!organStack.isEmpty()) {
-                int sustainOxygen = this.network.requestOxygen(1);
-                int sustainCalories = this.network.requestCalories(1);
-                int health = organStack.getOrCreateTag().getInt("health");
+            ItemStack foodStack = this.inventory.get(0);
 
-                if (sustainCalories < 1 || sustainOxygen < 1) {
-                    damageOrgan();
+            ItemStack stomachStack = this.inventory.get(1);
+            ItemStack smallIntestineStack = this.inventory.get(2);
+
+            if(!stomachStack.isEmpty() && !smallIntestineStack.isEmpty()) {
+                int sustainOxygen = this.network.requestOxygen(2);
+                int sustainCalories = this.network.requestCalories(2);
+
+                int capacity = (stomachStack.getOrCreateTag().getInt("health") * 500);
+                int absorbtionRate = (smallIntestineStack.getOrCreateTag().getInt("health") * 5);
+
+                if (sustainCalories < 2 || sustainOxygen < 2) {
+                    damageOrgans();
                 }else{
-                    healOrgan();
+                    healOrgans();
                 }
 
-                if(this.storedOxygen < 100 && this.breathDelay == 0){
-                    this.needsBreath = true;
+                if(this.processingCalories - absorbtionRate < 0){
+                    this.storedCalories += processingCalories;
+                    this.processingCalories = 0;
+                }else{
+                    this.processingCalories -= absorbtionRate;
+                    this.storedCalories += absorbtionRate;
                 }
 
-                if(this.needsBreath){
-                    sustainOxygen = this.network.requestOxygen(2);
-                    sustainCalories = this.network.requestCalories(2);
+                this.storedMaximum = capacity;
+                if(this.storedCalories > this.storedMaximum) this.storedCalories = this.storedMaximum;
 
-                    if(health <= 1) health = 2;
-                    float efficiency = (((float)(sustainCalories) + (float)(sustainOxygen) + 1) / 5.f) * (1.f - (breathDelay / (health)));
-
-                    this.needsBreath = false;
-                    this.storedOxygen = (int) ((health * 40) * efficiency);
-                    this.storedOxygenMax = (health * 40);
-                    this.breathDelay = health;
-                    this.world.playSound(null, this.pos, SoundEvents.ENTITY_BLAZE_AMBIENT, SoundCategory.BLOCKS, 0.1f, 1.f);
+                if(this.processingCalories == 0){
+                    if(!foodStack.isEmpty()){
+                        this.processingCalories +=
+                                foodStack.getItem().getFoodComponent().getHunger() *
+                                foodStack.getItem().getFoodComponent().getSaturationModifier() *
+                                2500;
+                        this.processingMaximum = this.processingCalories;
+                        System.out.println(this.processingCalories);
+                        foodStack.decrement(1);
+                    }
                 }
             }
         }
@@ -272,9 +304,10 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.fromTag(tag, this.inventory);
 
-        this.storedOxygen = tag.getInt("oxygen");
-        this.breathDelay = tag.getInt("breathDelay");
-        this.needsBreath = tag.getBoolean("breathNeeded");
+        this.storedCalories = tag.getInt("storedCalories");
+        this.storedMaximum = tag.getInt("storedMaximum");
+        this.processingCalories = tag.getInt("processingCalories");
+        this.processingMaximum = tag.getInt("processingMaximum");
     }
 
     @Override
@@ -283,9 +316,10 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
 
         Inventories.toTag(tag, this.inventory);
 
-        tag.putInt("oxygen", this.storedOxygen);
-        tag.putInt("breathDelay", this.breathDelay);
-        tag.putBoolean("breathNeeded", this.needsBreath);
+        tag.putInt("storedCalories", this.storedCalories);
+        tag.putInt("storedMaximum", this.storedMaximum);
+        tag.putInt("processingCalories", this.processingCalories);
+        tag.putInt("processingMaximum", this.processingMaximum);
 
         return tag;
     }
@@ -307,15 +341,12 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
 
     @Override
     public int getCalorieStorageCapacity() {
-        return 1024;
+        return 8192;
     }
 
     @Override
     public void onBeat() {
-        this.storedOxygen -= this.network.provideOxygen(this.storedOxygen);
+        this.storedCalories -= this.network.provideCalories(this.storedCalories);
     }
 
-    public void requestBreath() {
-        this.needsBreath = true;
-    }
 }

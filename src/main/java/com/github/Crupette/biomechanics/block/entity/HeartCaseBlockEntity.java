@@ -265,8 +265,7 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
                 int sustainOxygen = this.network.requestOxygen(1);
                 int sustainCalories = this.network.requestOxygen(1);
-                if (this.saturatedBottles < this.saturatedBottlesNeeded || this.depletedBottles < this.depletedBottlesNeeded ||
-                sustainOxygen < 1 || sustainCalories < 1) {
+                if (this.saturatedBottles < this.saturatedBottlesNeeded || this.depletedBottles < this.depletedBottlesNeeded || sustainOxygen < 1 || sustainCalories < 1) {
                     damageOrgan();
                 }else{
                     healOrgan();
@@ -279,27 +278,28 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
                     }
                 }
 
-                if(this.requestsBeat && !this.heartAttack){
+                if((this.requestsBeat || sustainCalories == 0 || sustainOxygen == 0) ){
                     sustainOxygen = this.network.requestOxygen(4);
                     sustainCalories = this.network.requestCalories(2);
                     this.requestsBeat = false;
 
+                    if(this.beatTick > heartHealth * 2){
+                        this.heartAttack = true;
+                    }
+                    int efficiency = heartHealth;
+                    int haChance = (int)((float)this.network.getCalorieOverflow() / 10000);
+                    if(haChance > 0){
+                        if(Math.random() * 100 > haChance) this.heartAttack = true;
+                    }
+                    if(heartAttack) efficiency /= 10;
                     if(sustainCalories >= 4 && sustainOxygen >= 2) {
-                        if(this.beatTick > heartHealth){
-                            this.heartAttack = true;
-                        }else {
-                            this.network.onBeat(heartHealth);
-                            this.beatTick = (short) (heartHealth / 2);
-                            this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.4f, 0.5f);
-                        }
+                        this.network.onBeat(efficiency);
+                        this.beatTick = (short) (efficiency / 2);
+                        this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.4f, 0.5f);
                     }else{
-                        if(this.beatTick > heartHealth){
-                            this.heartAttack = true;
-                        }else {
-                            this.network.onBeat(heartHealth);
-                            this.beatTick += (short) (heartHealth / 2) + (4 - sustainOxygen) + (2 - sustainCalories);
-                            this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.6f, 0.5f);
-                        }
+                        this.network.onBeat(efficiency / 2);
+                        this.beatTick += (short) (efficiency / 2);
+                        this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.6f, 0.5f);
                     }
                 }
             }else{
@@ -317,8 +317,8 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
                             int fluidNeeded = slot == 3 ? this.saturatedBottlesNeeded : this.depletedBottlesNeeded;
 
                             if(fluidCount < fluidNeeded){
-                                this.network.provideCalories(100);
-                                this.network.provideOxygen(100);
+                                this.network.provideCalories(1000);
+                                this.network.provideOxygen(1000);
                                 fluidCount++;
                                 bottleSlot.decrement(1);
                                 if(outputStack.isEmpty()){

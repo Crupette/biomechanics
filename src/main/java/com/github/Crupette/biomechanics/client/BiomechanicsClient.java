@@ -1,9 +1,11 @@
 package com.github.Crupette.biomechanics.client;
 
 import com.github.Crupette.biomechanics.Biomechanics;
+import com.github.Crupette.biomechanics.client.screen.DigestorScreen;
 import com.github.Crupette.biomechanics.client.screen.HeartCaseScreen;
 import com.github.Crupette.biomechanics.client.screen.OxygenPumpScreen;
 import com.github.Crupette.biomechanics.client.screen.SqueezerScreen;
+import com.github.Crupette.biomechanics.screen.DigestorScreenHandler;
 import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
 import com.github.Crupette.biomechanics.screen.OxygenPumpScreenHandler;
 import com.github.Crupette.biomechanics.screen.SqueezerScreenHandler;
@@ -29,6 +31,10 @@ public class BiomechanicsClient implements ClientModInitializer {
 
         ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("oxygen_pump"), (container) -> {
             return new OxygenPumpScreen((OxygenPumpScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.oxygen_pump"));
+        });
+
+        ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("digestor"), (container) -> {
+            return new DigestorScreen((DigestorScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.digestor"));
         });
     }
 }

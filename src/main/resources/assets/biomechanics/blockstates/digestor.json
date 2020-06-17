@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "biomechanics:block/digestor",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "biomechanics:block/digestor"e
+    },
+    "facing=south": {
+      "model": "biomechanics:block/digestor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "biomechanics:block/digestor",
+      "y": 270
+    }
+  }
+}

@@ -5,6 +5,7 @@ import com.github.Crupette.biomechanics.block.entity.HeartCaseBlockEntity;
 import com.github.Crupette.biomechanics.block.entity.OxygenPumpBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
+import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,26 +50,41 @@ public class CirculatoryNetwork {
             }
         });
         this.children.clear();
+        this.lungs.clear();
         this.children.add(this.heart);
     }
 
     public void onBeat(int health){
         this.heartHealth = health;
-        this.calorieStorage += this.bloodCalories / 2;
+        this.calorieStorage += (this.bloodCalories / 2);
         this.bloodCalories /= 2;
 
-        //Testing
-        this.bloodCalories = 100;
-        this.calorieStorage = 32;
+        if(this.calorieStorage < 0) this.calorieStorage = 0;
+
+        if(this.bloodCalories == 0){
+            if(this.calorieOverflow > 0){
+                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * (this.heartHealth / 4), this.calorieOverflow);
+                this.bloodCalories += transfer;
+                this.calorieOverflow -= transfer;
+            }else {
+                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * (this.heartHealth / 4), this.calorieStorage);
+                this.bloodCalories += transfer;
+                this.calorieStorage -= transfer;
+                System.out.println("Transfusing " + transfer + " calories");
+            }
+        }
+
+        if(this.calorieStorage != this.calorieStorageCapacity && this.calorieOverflow > 0){
+            int transfer = Math.min(this.calorieOverflow, this.calorieStorageCapacity - this.calorieStorage);
+            this.calorieStorage += transfer;
+            this.calorieOverflow -= transfer;
+        }
 
         if(this.calorieStorage > this.calorieStorageCapacity){
-            this.calorieOverflow = this.calorieStorage - this.calorieStorageCapacity;
+            this.calorieOverflow += this.calorieStorage - this.calorieStorageCapacity;
             this.calorieStorage = this.calorieStorageCapacity;
         }
-        if(this.calorieStorage < this.calorieStorageCapacity && this.calorieOverflow > 0){
-            int transfer = Math.min(this.calorieStorageCapacity - this.calorieStorage, this.calorieOverflow);
-            this.calorieStorage += transfer;
-        }
+        if(this.calorieOverflow < 0) this.calorieOverflow = 0;
 
         this.children.forEach((child) -> {
             ((Biological)child).onBeat();
@@ -76,17 +92,32 @@ public class CirculatoryNetwork {
     }
 
     public int requestCalories(int cal){
-        int ret = Math.min(this.bloodCalories, cal);
-        this.bloodCalories -= ret;
-        if(this.bloodCalories <= 0){
-            int storedObtained = Math.min(this.calorieStorage, cal - ret);
-            this.calorieStorage -= storedObtained;
-            ret += storedObtained;
+        if(this.bloodCalories < cal){
+            int ret = this.bloodCalories;
+            this.bloodCalories = 0;
 
+            if(this.calorieStorage < (cal - ret)){
+                ret += this.calorieStorage;
+                this.calorieStorage = 0;
+                if(this.calorieOverflow < (cal - ret)){
+                    ret += this.calorieOverflow;
+                    this.calorieOverflow = 0;
+                }else{
+                    this.calorieOverflow -= (cal - ret);
+                    ret += (cal - ret);
+                }
+            }else{
+                this.calorieStorage -= (cal - ret);
+                ret += (cal - ret);
+            }
+
+            //System.out.println("Requesting beat : " + this.heart);
             this.heart.requestBeat();
+            return ret;
+        }else{
+            this.bloodCalories -= cal;
+            return cal;
         }
-
-        return ret;
     }
 
     public int requestOxygen(int oxygen){
@@ -95,6 +126,7 @@ public class CirculatoryNetwork {
         if(this.bloodOxygen <= 0){
 
             for(OxygenPumpBlockEntity lung : this.lungs){
+                //System.out.println("Requesting breath : " + lung);
                 lung.requestBreath();
             }
         }
@@ -102,12 +134,9 @@ public class CirculatoryNetwork {
     }
 
     public int provideCalories(int calories){
-        this.bloodCalories += calories;
-        if(this.bloodCalories > (BLOOD_CALORIE_MAX_SATURATION * heartHealth)){
-            this.calorieStorage += (BLOOD_CALORIE_MAX_SATURATION * heartHealth) - this.bloodCalories;
-            this.bloodCalories = (BLOOD_CALORIE_MAX_SATURATION * heartHealth);
-        }
-        return calories;
+        int ret = Math.min(calories, this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth);
+        this.bloodCalories += ret;
+        return ret;
     }
 
     public int provideOxygen(int oxygen) {
@@ -140,4 +169,22 @@ public class CirculatoryNetwork {
         this.calorieStorage = networkTag.getInt("storedCalories");
         this.calorieOverflow = networkTag.getInt("overflowCalories");
     }
+
+    public int getCalorieStorage() { return this.calorieStorage; }
+    public int getCalorieStorageCapacity() { return this.calorieStorageCapacity; }
+    public int getCalorieOverflow() { return this.calorieOverflow; }
+
+    public int getBloodCalories() { return this.bloodCalories; }
+    public int getBloodOxygen() { return this.bloodOxygen; }
+
+    public int getHeartHealth() { return this.heartHealth; }
+
+    public void setCalorieStorage           (int val) { this.calorieStorage = val; }
+    public void setCalorieStorageCapacity   (int val) { this.calorieStorageCapacity = val; }
+    public void setCalorieOverflow          (int val) { this.calorieOverflow = val; }
+                                             
+    public void setBloodCalories            (int val) { this.bloodCalories = val; }
+    public void setBloodOxygen              (int val) { this.bloodOxygen = val; }
+
+    public void setHeartHealth             (int val) { this.heartHealth = val; }
 }

@@ -1,19 +1,20 @@
 package com.github.Crupette.biomechanics.block;
 
 import com.github.Crupette.biomechanics.Biomechanics;
+import com.github.Crupette.biomechanics.block.entity.DigestorBlockEntity;
 import com.github.Crupette.biomechanics.block.entity.HeartCaseBlockEntity;
 import com.github.Crupette.biomechanics.block.entity.OxygenPumpBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -21,22 +22,22 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class OxygenPumpBlock extends FacingWithEntity {
+public class DigestorBlock extends FacingWithEntity {
 
-    protected OxygenPumpBlock(Settings settings) {
+    protected DigestorBlock(Settings settings) {
         super(settings);
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockView world) {
-        return new OxygenPumpBlockEntity();
+        return new DigestorBlockEntity();
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         } else {
-            ContainerProviderRegistry.INSTANCE.openContainer(Biomechanics.identify("oxygen_pump"), player, buf -> buf.writeBlockPos(pos));
+            ContainerProviderRegistry.INSTANCE.openContainer(Biomechanics.identify("digestor"), player, buf -> buf.writeBlockPos(pos));
             return ActionResult.CONSUME;
         }
     }
@@ -44,8 +45,8 @@ public class OxygenPumpBlock extends FacingWithEntity {
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         if (itemStack.hasCustomName()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof OxygenPumpBlockEntity) {
-                ((OxygenPumpBlockEntity)blockEntity).setCustomName(itemStack.getName());
+            if (blockEntity instanceof DigestorBlockEntity) {
+                ((DigestorBlockEntity)blockEntity).setCustomName(itemStack.getName());
             }
         }
 
@@ -54,8 +55,8 @@ public class OxygenPumpBlock extends FacingWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof OxygenPumpBlockEntity) {
-                ItemScatterer.spawn(world, pos, (OxygenPumpBlockEntity)blockEntity);
+            if (blockEntity instanceof DigestorBlockEntity) {
+                ItemScatterer.spawn(world, pos, (DigestorBlockEntity)blockEntity);
                 world.updateComparators(pos, this);
             }
 
@@ -65,14 +66,14 @@ public class OxygenPumpBlock extends FacingWithEntity {
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if(blockEntity instanceof OxygenPumpBlockEntity){
-            OxygenPumpBlockEntity oxygenPumpBlockEntity = (OxygenPumpBlockEntity)blockEntity;
-            if(oxygenPumpBlockEntity.getParent() == null){
-               oxygenPumpBlockEntity.setParent(null);
+        if(blockEntity instanceof DigestorBlockEntity){
+            DigestorBlockEntity digestorBlockEntity = (DigestorBlockEntity)blockEntity;
+            if(digestorBlockEntity.getParent() == null){
+                digestorBlockEntity.setParent(null);
             }else {
-                HeartCaseBlockEntity parent = (HeartCaseBlockEntity) world.getBlockEntity(oxygenPumpBlockEntity.getParent());
+                HeartCaseBlockEntity parent = (HeartCaseBlockEntity) world.getBlockEntity(digestorBlockEntity.getParent());
                 if(parent != null) {
-                   parent.updateConnectionTree();
+                    parent.updateConnectionTree();
                 }
             }
         }

@@ -18,6 +18,7 @@ public class BiomechanicsBlocks {
 
     public static final Block HEART_CASE = new HeartCaseBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL));
     public static final Block OXYGEN_PUMP = new OxygenPumpBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL));
+    public static final Block DIGESTOR = new DigestorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL));
 
     public static final Block BLOOD_VESSEL = new BloodVesselBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).sounds(BlockSoundGroup.HONEY));
 
@@ -30,6 +31,7 @@ public class BiomechanicsBlocks {
         register("squeezer", SQUEEZER, new Item.Settings().group(ItemGroup.DECORATIONS));
         register("heart_case", HEART_CASE, new Item.Settings().group(ItemGroup.DECORATIONS));
         register("oxygen_pump", OXYGEN_PUMP, new Item.Settings().group(ItemGroup.DECORATIONS));
+        register("digestor", DIGESTOR, new Item.Settings().group(ItemGroup.DECORATIONS));
 
         register("blood_vessel", BLOOD_VESSEL, new Item.Settings().group(ItemGroup.DECORATIONS));
     }
