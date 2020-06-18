@@ -1,5 +1,6 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.block.DigestorBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.DigestorScreenHandler;
 import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
@@ -51,11 +52,11 @@ public class DigestorBlockEntity extends LockableContainerBlockEntity implements
                     case 1: return DigestorBlockEntity.this.storedMaximum;
                     case 2: return DigestorBlockEntity.this.processingCalories;
                     case 3: return DigestorBlockEntity.this.processingMaximum;
-                    case 4: return DigestorBlockEntity.this.network.getCalorieStorage();
-                    case 5: return DigestorBlockEntity.this.network.getCalorieStorageCapacity();
-                    case 6: return DigestorBlockEntity.this.network.getCalorieOverflow();
-                    case 7: return DigestorBlockEntity.this.network.getBloodCalories();
-                    case 8: return DigestorBlockEntity.this.network.getHeartHealth();
+                    case 4: return DigestorBlockEntity.this.network != null ? DigestorBlockEntity.this.network.getCalorieStorage() : 0;
+                    case 5: return DigestorBlockEntity.this.network != null ? DigestorBlockEntity.this.network.getCalorieStorageCapacity() : 0;
+                    case 6: return DigestorBlockEntity.this.network != null ? DigestorBlockEntity.this.network.getCalorieOverflow() : 0;
+                    case 7: return DigestorBlockEntity.this.network != null ? DigestorBlockEntity.this.network.getBloodCalories() : 0;
+                    case 8: return DigestorBlockEntity.this.network != null ? DigestorBlockEntity.this.network.getHeartHealth() : 0;
                     default: return 0;
                 }
             }
@@ -70,15 +71,15 @@ public class DigestorBlockEntity extends LockableContainerBlockEntity implements
                         break;
                     case 3: DigestorBlockEntity.this.processingMaximum = value;
                         break;
-                    case 4: DigestorBlockEntity.this.network.setCalorieStorage(value);
+                    case 4:   if(DigestorBlockEntity.this.network != null) DigestorBlockEntity.this.network.setCalorieStorage(value);
                         break;
-                    case 5: DigestorBlockEntity.this.network.setCalorieStorageCapacity(value);
+                    case 5:   if(DigestorBlockEntity.this.network != null) DigestorBlockEntity.this.network.setCalorieStorageCapacity(value);
                         break;
-                    case 6: DigestorBlockEntity.this.network.setCalorieOverflow(value);
+                    case 6:   if(DigestorBlockEntity.this.network != null) DigestorBlockEntity.this.network.setCalorieOverflow(value);
                         break;
-                    case 7: DigestorBlockEntity.this.network.setBloodCalories(value);
+                    case 7:   if(DigestorBlockEntity.this.network != null) DigestorBlockEntity.this.network.setBloodCalories(value);
                         break;
-                    case 8: DigestorBlockEntity.this.network.setHeartHealth(value);
+                    case 8:   if(DigestorBlockEntity.this.network != null) DigestorBlockEntity.this.network.setHeartHealth(value);
 
                 }
             }
@@ -197,7 +198,7 @@ public class DigestorBlockEntity extends LockableContainerBlockEntity implements
                 }
             }
             if(health < 0) {
-                inventory.set(0, ItemStack.EMPTY);
+                organStack.decrement(1);
             }else {
                 CompoundTag tag = organStack.getTag();
                 tag.putInt("suffocationTicks", suffocationTicks);

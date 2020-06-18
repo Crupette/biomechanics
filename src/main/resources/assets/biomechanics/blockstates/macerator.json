@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "biomechanics:block/macerator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "biomechanics:block/macerator"
+    },
+    "facing=south": {
+      "model": "biomechanics:block/macerator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "biomechanics:block/macerator",
+      "y": 270
+    }
+  }
+}

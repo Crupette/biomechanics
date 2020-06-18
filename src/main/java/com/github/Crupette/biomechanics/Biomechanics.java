@@ -3,6 +3,7 @@ package com.github.Crupette.biomechanics;
 import com.github.Crupette.biomechanics.block.BiomechanicsBlocks;
 import com.github.Crupette.biomechanics.block.entity.BiomechanicsBlockEntities;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
+import com.github.Crupette.biomechanics.recipe.BiomechanicsRecipes;
 import com.github.Crupette.biomechanics.screen.BiomechanicsScreenTypes;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -27,6 +28,7 @@ public class Biomechanics implements ModInitializer {
         BiomechanicsBlocks.init();
         BiomechanicsBlockEntities.init();
         BiomechanicsScreenTypes.init();
+        BiomechanicsRecipes.init();
     }
 
     public static void log(Level level, String message){

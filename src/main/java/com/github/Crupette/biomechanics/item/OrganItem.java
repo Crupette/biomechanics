@@ -87,7 +87,7 @@ public class OrganItem extends Item {
     @Override
     public String getTranslationKey(ItemStack stack) {
         if(!stack.getOrCreateTag().getString("customName").isEmpty()){
-            return stack.getOrCreateTag().getString("customName") + "'s Heart";
+            return stack.getOrCreateTag().getString("customName") + "'s " + this.organName;
         }
         return super.getTranslationKey(stack) + "." + stack.getOrCreateTag().getString("entity");
     }

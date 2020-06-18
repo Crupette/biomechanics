@@ -14,6 +14,8 @@ public class BiomechanicsItems {
 
     public static Item DECAY_STABILIZER = new RandomlyDecayingItem(new Item.Settings().maxDamage(1024).group(ItemGroup.MISC));
     public static Item BLOOD_BOTTLE = new Item(new Item.Settings().group(ItemGroup.MISC));
+    public static Item IRON_CHUNK = new Item(new Item.Settings().group(ItemGroup.MATERIALS));
+    public static Item GOLD_CHUNK = new Item(new Item.Settings().group(ItemGroup.MATERIALS));
 
     public static Item SCALPEL = new SwordItem(ToolMaterials.IRON, 0, -1.5f, new Item.Settings().group(ItemGroup.COMBAT).maxDamage(256));
 

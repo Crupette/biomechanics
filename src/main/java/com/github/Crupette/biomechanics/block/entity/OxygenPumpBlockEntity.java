@@ -259,7 +259,7 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
                     this.storedOxygen = (int) ((health * 40) * efficiency);
                     this.storedOxygenMax = (health * 40);
                     this.breathDelay = health;
-                    this.world.playSound(null, this.pos, SoundEvents.ENTITY_BLAZE_AMBIENT, SoundCategory.BLOCKS, 0.1f, 1.f);
+                    this.world.playSound(null, this.pos, SoundEvents.ENTITY_PLAYER_BREATH, SoundCategory.BLOCKS, 0.1f, 1.f);
                 }
             }
         }

@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:lapis_ore"
+  },
+  "time": 250,
+  "result": {
+    "item": "minecraft:lapis_lazuli",
+    "count": 5
+  }
+}

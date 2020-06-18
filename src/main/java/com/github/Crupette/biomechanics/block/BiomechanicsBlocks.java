@@ -1,6 +1,7 @@
 package com.github.Crupette.biomechanics.block;
 
 import com.github.Crupette.biomechanics.Biomechanics;
+import com.github.Crupette.biomechanics.block.entity.MaceratorBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -21,6 +22,7 @@ public class BiomechanicsBlocks {
     public static final Block DIGESTOR = new DigestorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL));
 
     public static final Block BLOOD_VESSEL = new BloodVesselBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).sounds(BlockSoundGroup.HONEY));
+    public static final Block MACERATOR = new MaceratorBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).sounds(BlockSoundGroup.HONEY));
 
     private static void register(String name, Block block, Item.Settings settings){
         Registry.register(Registry.BLOCK, Biomechanics.identify(name), block);
@@ -32,6 +34,8 @@ public class BiomechanicsBlocks {
         register("heart_case", HEART_CASE, new Item.Settings().group(ItemGroup.DECORATIONS));
         register("oxygen_pump", OXYGEN_PUMP, new Item.Settings().group(ItemGroup.DECORATIONS));
         register("digestor", DIGESTOR, new Item.Settings().group(ItemGroup.DECORATIONS));
+
+        register("macerator", MACERATOR, new Item.Settings().group(ItemGroup.DECORATIONS));
 
         register("blood_vessel", BLOOD_VESSEL, new Item.Settings().group(ItemGroup.DECORATIONS));
     }

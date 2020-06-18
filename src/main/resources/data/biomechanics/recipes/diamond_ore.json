@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:diamond_ore"
+  },
+  "time": 500,
+  "result": {
+    "item": "minecraft:diamond",
+    "count": 2
+  }
+}

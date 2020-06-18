@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:gold_ore"
+  },
+  "time": 300,
+  "result": {
+    "item": "biomechanics:gold_chunk",
+    "count": 2
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:redstone_ore"
+  },
+  "time": 250,
+  "result": {
+    "item": "minecraft:redstone",
+    "count": 6
+  }
+}
