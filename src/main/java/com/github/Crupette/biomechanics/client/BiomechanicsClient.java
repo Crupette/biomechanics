@@ -1,19 +1,18 @@
 package com.github.Crupette.biomechanics.client;
 
 import com.github.Crupette.biomechanics.Biomechanics;
-import com.github.Crupette.biomechanics.client.screen.DigestorScreen;
-import com.github.Crupette.biomechanics.client.screen.HeartCaseScreen;
-import com.github.Crupette.biomechanics.client.screen.OxygenPumpScreen;
-import com.github.Crupette.biomechanics.client.screen.SqueezerScreen;
-import com.github.Crupette.biomechanics.screen.DigestorScreenHandler;
-import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
-import com.github.Crupette.biomechanics.screen.OxygenPumpScreenHandler;
-import com.github.Crupette.biomechanics.screen.SqueezerScreenHandler;
+import com.github.Crupette.biomechanics.client.screen.*;
+import com.github.Crupette.biomechanics.screen.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 @Environment(EnvType.CLIENT)
@@ -36,5 +35,11 @@ public class BiomechanicsClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("digestor"), (container) -> {
             return new DigestorScreen((DigestorScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.digestor"));
         });
+
+        ScreenRegistry.register(BiomechanicsScreenTypes.BOILER, (ScreenRegistry.Factory<BoilerScreenHandler, BoilerScreen>) (boilerScreenHandler, playerInventory, text) -> {
+            return new BoilerScreen(boilerScreenHandler, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.boiler"));
+        });
+
+        BiomechanicsScreenTypes.BOILER = ScreenHandlerRegistry.registerSimple(Biomechanics.identify("boiler"), BoilerScreenHandler::new);
     }
 }

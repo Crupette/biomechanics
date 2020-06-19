@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "c:sapphire"
+  },
+  "time": 250,
+  "result": {
+    "item": "c:sapphire_dust",
+    "count": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "c:topaz"
+  },
+  "time": 250,
+  "result": {
+    "item": "c:topaz_dust",
+    "count": 1
+  }
+}

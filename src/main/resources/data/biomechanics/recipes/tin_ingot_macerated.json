@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:tin_ingots"
+    }
+  ],
+  "time": 175,
+  "result": {
+    "item": "c:tin_dust",
+    "count": 1
+  }
+}

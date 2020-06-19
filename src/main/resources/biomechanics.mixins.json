@@ -3,7 +3,8 @@
   "package": "com.github.Crupette.biomechanics.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
     "ItemColorsMixin"

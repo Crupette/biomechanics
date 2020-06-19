@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:silver_ores"
+    }
+  ],
+  "time": 225,
+  "result": {
+    "item": "c:silver_dust",
+    "count": 2
+  }
+}

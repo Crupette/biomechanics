@@ -50,14 +50,14 @@ public class DigestorScreen extends HandledScreen<DigestorScreenHandler> {
         int processingCals = this.handler.getProcessingCalories();
         int processingMax = this.handler.getProcessingMaximum();
 
-        if(processingCals != 0 && processingMax != 0){
+        if(processingMax > 0 && processingCals > 0){
             int stage = (int) (((float)processingCals / (float)processingMax) * 13);
             this.drawTexture(matrices, i + 101, j + 17 + 12 - stage, 176, 12 - stage, 14, stage + 1);
         }
 
         int stomachStorage = this.handler.getStoredCalories();
         int stomachMaximum = this.handler.getStoredMaximum();
-        if(stomachStorage > 0 && stomachMaximum > 0){
+        if(stomachMaximum > 0 && stomachStorage > 0){
             int stage = (int)(((float)stomachStorage / (float)stomachMaximum) * 35);
             stage = Math.min(35 , stage);
             this.drawTexture(matrices, i + 100, j + 34 + 36 - stage, 176, 13 + 36 - stage, 16, stage + 1);
@@ -65,7 +65,7 @@ public class DigestorScreen extends HandledScreen<DigestorScreenHandler> {
 
         int networkStorage = this.handler.getNetworkCalories();
         int networkMaximum = this.handler.getNetworkCaloriesStorage();
-        if(networkStorage > 0 && networkMaximum > 0){
+        if(networkMaximum > 0 && networkStorage > 0){
             int stage = (int)(((float)networkStorage / (float)networkMaximum) * 35);
             stage = Math.min(35 , stage);
             this.drawTexture(matrices, i + 120, j + 34 + 36 - stage, 176, 13 + 36 - stage, 16, stage + 1);
@@ -74,7 +74,7 @@ public class DigestorScreen extends HandledScreen<DigestorScreenHandler> {
         int bloodStorage = this.handler.getNetworkBloodCalories();
         int bloodMaximum = this.handler.getNetworkHeartHealth() * CirculatoryNetwork.BLOOD_CALORIE_MAX_SATURATION;
 
-        if(bloodStorage > 0 && bloodMaximum > 0){
+        if(bloodMaximum > 0 && bloodStorage > 0){
             int stage = (int)(((float)bloodStorage / (float)bloodMaximum) * 35);
             stage = Math.min(35 , stage);
             this.drawTexture(matrices, i + 140, j + 34 + 36 - stage, 176, 13 + 36 + 36 - stage, 16, stage + 1);

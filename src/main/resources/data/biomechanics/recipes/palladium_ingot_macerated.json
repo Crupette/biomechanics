@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:palladium_ingots"
+    }
+  ],
+  "time": 500,
+  "result": {
+    "item": "c:palladium_dust",
+    "count": 1
+  }
+}

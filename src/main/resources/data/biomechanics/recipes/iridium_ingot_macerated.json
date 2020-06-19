@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:iridium_ingots"
+    }
+  ],
+  "time": 800,
+  "result": {
+    "item": "c:iridium_dust",
+    "count": 1
+  }
+}

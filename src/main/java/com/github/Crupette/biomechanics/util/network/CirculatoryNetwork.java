@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CirculatoryNetwork {
     public static final int BLOOD_CALORIE_MAX_SATURATION = 50;
-    public static final int BLOOD_OXYGEN_MAX_SATURATION = 100;
+    public static final int BLOOD_OXYGEN_MAX_SATURATION = 150;
 
     private final List<BlockEntity> children = new ArrayList<>();
     private List<OxygenPumpBlockEntity> lungs = new ArrayList<>();
@@ -63,14 +63,13 @@ public class CirculatoryNetwork {
 
         if(this.bloodCalories == 0){
             if(this.calorieOverflow > 0){
-                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * (this.heartHealth / 4), this.calorieOverflow);
+                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieOverflow);
                 this.bloodCalories += transfer;
                 this.calorieOverflow -= transfer;
             }else {
-                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * (this.heartHealth / 4), this.calorieStorage);
+                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieStorage);
                 this.bloodCalories += transfer;
                 this.calorieStorage -= transfer;
-                System.out.println("Transfusing " + transfer + " calories");
             }
         }
 

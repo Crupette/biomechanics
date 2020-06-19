@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:uranium_ingots"
+    }
+  ],
+  "time": 300,
+  "result": {
+    "item": "c:uranium_dust",
+    "count": 1
+  }
+}

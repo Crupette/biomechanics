@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "biomechanics:block/boiler/top",
+    "bottom": "biomechanics:block/meat",
+    "side": "biomechanics:block/boiler/side",
+    "front": "biomechanics:block/boiler/front"
+  }
+}

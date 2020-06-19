@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:ruby_ores"
+    }
+  ],
+  "time": 250,
+  "result": {
+    "item": "c:ruby",
+    "count": 2
+  }
+}

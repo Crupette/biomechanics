@@ -1,5 +1,6 @@
 package com.github.Crupette.biomechanics.recipe;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -76,7 +77,8 @@ public class MaceratorRecipe implements Recipe<Inventory> {
 
         @Override
         public MaceratorRecipe read(Identifier id, JsonObject json) {
-            Ingredient input = Ingredient.fromJson(JsonHelper.getObject(json, "input"));
+            JsonElement jsonElement = JsonHelper.hasArray(json, "input") ? JsonHelper.getArray(json, "input") : JsonHelper.getObject(json, "input");
+            Ingredient input = Ingredient.fromJson(jsonElement);
             int time = JsonHelper.getInt(json, "time");
             ItemStack result = ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result"));
             return new MaceratorRecipe(id, input, time, result);

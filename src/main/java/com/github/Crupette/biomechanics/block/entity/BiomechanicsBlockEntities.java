@@ -20,6 +20,9 @@ public class BiomechanicsBlockEntities {
     public static final BlockEntityType<DigestorBlockEntity> DIGESTOR =
             BlockEntityType.Builder.create(DigestorBlockEntity::new, new Block[] {BiomechanicsBlocks.DIGESTOR}).build(null);
 
+    public static final BlockEntityType<BoilerBlockEntity> BOILER =
+            BlockEntityType.Builder.create(BoilerBlockEntity::new, new Block[] {BiomechanicsBlocks.BOILER}).build(null);
+
     public static final BlockEntityType<BloodVesselBlockEntity> BLOOD_VESSEL =
             BlockEntityType.Builder.create(BloodVesselBlockEntity::new, new Block[]{BiomechanicsBlocks.BLOOD_VESSEL}).build(null);
 
@@ -32,6 +35,8 @@ public class BiomechanicsBlockEntities {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("heart_case"), HEART_CASE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("oxygen_pump"), OXYGEN_PUMP);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("digestor"), DIGESTOR);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("boiler"), BOILER);
+
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("blood_vessel"), BLOOD_VESSEL);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("macerator"), MACERATOR);

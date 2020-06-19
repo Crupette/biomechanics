@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:gold_ingot"
+  },
+  "time": 300,
+  "result": {
+    "item": "c:gold_dust",
+    "count": 1
+  }
+}

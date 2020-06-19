@@ -1,14 +1,16 @@
 package com.github.Crupette.biomechanics.screen;
 
 import com.github.Crupette.biomechanics.Biomechanics;
-import com.github.Crupette.biomechanics.block.entity.DigestorBlockEntity;
-import com.github.Crupette.biomechanics.block.entity.HeartCaseBlockEntity;
-import com.github.Crupette.biomechanics.block.entity.OxygenPumpBlockEntity;
-import com.github.Crupette.biomechanics.block.entity.SqueezerBlockEntity;
+import com.github.Crupette.biomechanics.block.entity.*;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 
 public class BiomechanicsScreenTypes {
+
+    public static ScreenHandlerType<BoilerScreenHandler> BOILER = null;
 
     public static void init(){
 

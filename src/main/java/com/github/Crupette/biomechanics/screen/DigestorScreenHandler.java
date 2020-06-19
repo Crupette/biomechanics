@@ -26,8 +26,8 @@ public class DigestorScreenHandler extends ScreenHandler {
 
     public DigestorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(null, syncId);
-        checkSize(inventory, 4);
-        checkDataCount(propertyDelegate, 9);
+        checkSize(inventory, 2);
+        checkDataCount(propertyDelegate, 3);
         this.inventory = inventory;
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.world;

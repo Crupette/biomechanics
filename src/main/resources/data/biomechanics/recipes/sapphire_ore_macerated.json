@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:sapphire_ores"
+    }
+  ],
+  "time": 250,
+  "result": {
+    "item": "c:sapphire",
+    "count": 2
+  }
+}

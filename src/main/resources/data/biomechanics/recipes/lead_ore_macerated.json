@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:lead_ores"
+    }
+  ],
+  "time": 225,
+  "result": {
+    "item": "c:lead_dust",
+    "count": 2
+  }
+}

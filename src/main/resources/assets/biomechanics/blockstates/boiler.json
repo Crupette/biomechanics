@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "biomechanics:block/boiler",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "biomechanics:block/boiler"
+    },
+    "facing=south": {
+      "model": "biomechanics:block/boiler",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "biomechanics:block/boiler",
+      "y": 270
+    }
+  }
+}

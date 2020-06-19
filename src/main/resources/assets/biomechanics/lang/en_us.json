@@ -205,6 +205,8 @@
     "block.biomechanics.oxygen_pump": "Oxygen Pump",
     "block.biomechanics.digestor": "Digestor",
     "block.biomechanics.blood_vessel": "Blood Vessel",
+    "block.biomechanics.macerator": "Macerator",
+    "block.biomechanics.boiler": "Boiler",
 
     "tooltip.biomechanics.organ_health": "Health:"
 }

@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:diamond"
+  },
+  "time": 300,
+  "result": {
+    "item": "c:diamond_dust",
+    "count": 2
+  }
+}

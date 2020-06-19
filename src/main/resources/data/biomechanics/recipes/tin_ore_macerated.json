@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:tin_ores"
+    }
+  ],
+  "time": 175,
+  "result": {
+    "item": "c:tin_dust",
+    "count": 2
+  }
+}

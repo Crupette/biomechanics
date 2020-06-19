@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:platinum_ores"
+    }
+  ],
+  "time": 400,
+  "result": {
+    "item": "c:platinum_dust",
+    "count": 2
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:osmium_ores"
+    }
+  ],
+  "time": 250,
+  "result": {
+    "item": "c:osmium_dust",
+    "count": 2
+  }
+}

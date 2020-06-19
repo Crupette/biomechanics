@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "c:amethyst"
+  },
+  "time": 300,
+  "result": {
+    "item": "c:amethyst_dust",
+    "count": 1
+  }
+}

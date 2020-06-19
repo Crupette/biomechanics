@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:cobalt_ingots"
+    }
+  ],
+  "time": 600,
+  "result": {
+    "item": "c:cobalt_dust",
+    "count": 1
+  }
+}

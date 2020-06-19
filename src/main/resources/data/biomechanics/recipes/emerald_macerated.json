@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:emerald"
+  },
+  "time": 500,
+  "result": {
+    "item": "c:emerald_dust",
+    "count": 1
+  }
+}

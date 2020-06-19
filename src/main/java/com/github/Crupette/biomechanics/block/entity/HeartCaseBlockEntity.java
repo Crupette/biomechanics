@@ -273,12 +273,16 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
 
                 if(this.beatTick > 0) {
                     this.beatTick--;
-                    if(this.beatTick == 0){
+                    if(this.beatTick == 5){
                         this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.4f, 1.3f);
                     }
                 }
 
-                if((this.requestsBeat || sustainCalories == 0 || sustainOxygen == 0) ){
+                if((this.network.getBloodCalories() < heartHealth * 10 || this.network.getBloodOxygen() < heartHealth * 10) && this.beatTick == 0){
+                    this.requestsBeat = true;
+                }
+
+                if((this.requestsBeat) ){
                     sustainOxygen = this.network.requestOxygen(4);
                     sustainCalories = this.network.requestCalories(2);
                     this.requestsBeat = false;

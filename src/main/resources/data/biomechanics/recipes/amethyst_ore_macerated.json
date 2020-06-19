@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:amethyst_ores"
+    }
+  ],
+  "time": 300,
+  "result": {
+    "item": "c:amethyst",
+    "count": 2
+  }
+}

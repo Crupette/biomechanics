@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:coal"
+  },
+  "time": 300,
+  "result": {
+    "item": "c:coal_dust",
+    "count": 2
+  }
+}

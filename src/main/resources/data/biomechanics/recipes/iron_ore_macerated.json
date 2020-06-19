@@ -1,0 +1,11 @@
+{
+  "type": "biomechanics:macerating",
+  "input": {
+    "item": "minecraft:iron_ore"
+  },
+  "time": 200,
+  "result": {
+    "item": "c:iron_dust",
+    "count": 2
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:zinc_ingots"
+    }
+  ],
+  "time": 175,
+  "result": {
+    "item": "c:zinc_dust",
+    "count": 1
+  }
+}

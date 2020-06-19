@@ -1,11 +1,11 @@
 {
   "type": "biomechanics:macerating",
   "input": {
-    "item": "minecraft:iron_ore"
+    "item": "minecraft:nether_quartz_ore"
   },
   "time": 200,
   "result": {
-    "item": "biomechanics:iron_chunk",
+    "item": "minecraft:quartz",
     "count": 2
   }
 }

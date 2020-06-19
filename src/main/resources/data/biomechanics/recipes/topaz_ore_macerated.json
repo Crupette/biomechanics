@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:topaz_ores"
+    }
+  ],
+  "time": 250,
+  "result": {
+    "item": "c:topaz",
+    "count": 2
+  }
+}

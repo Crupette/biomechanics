@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:tungsten_ores"
+    }
+  ],
+  "time": 450,
+  "result": {
+    "item": "c:tungsten_dust",
+    "count": 2
+  }
+}

@@ -263,8 +263,8 @@ public class DigestorBlockEntity extends LockableContainerBlockEntity implements
                 int sustainOxygen = this.network.requestOxygen(2);
                 int sustainCalories = this.network.requestCalories(2);
 
-                int capacity = (stomachStack.getOrCreateTag().getInt("health") * 500);
-                int absorbtionRate = (smallIntestineStack.getOrCreateTag().getInt("health") * 5);
+                int capacity = (stomachStack.getOrCreateTag().getInt("health") * 800);
+                int absorbtionRate = (smallIntestineStack.getOrCreateTag().getInt("health") * 3);
 
                 if (sustainCalories < 2 || sustainOxygen < 2) {
                     damageOrgans();
@@ -290,7 +290,6 @@ public class DigestorBlockEntity extends LockableContainerBlockEntity implements
                                 foodStack.getItem().getFoodComponent().getSaturationModifier() *
                                 2500;
                         this.processingMaximum = this.processingCalories;
-                        System.out.println(this.processingCalories);
                         foodStack.decrement(1);
                     }
                 }

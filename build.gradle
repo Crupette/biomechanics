@@ -21,6 +21,11 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	modImplementation "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
+	include "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
+
+	modRuntime "io.github.prospector:modmenu:1.12.1+build.15"
 }
 
 processResources {
@@ -77,4 +82,8 @@ publishing {
 		// uncomment to publish to the local maven
 		// mavenLocal()
 	}
+}
+
+repositories {
+	maven { url 'http://server.bbkr.space:8081/artifactory/libs-release' }
 }
