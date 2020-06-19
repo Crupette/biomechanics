@@ -10,6 +10,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -53,10 +55,6 @@ public class BoilerScreenHandler extends ScreenHandler {
         this.addProperties(propertyDelegate);
     }
 
-    public BoilerScreenHandler(int sync, PlayerInventory playerInventory) {
-        this(sync, playerInventory, new SimpleInventory(2), new ArrayPropertyDelegate(3));
-    }
-
     public boolean canUse(PlayerEntity player) {
         return this.inventory.canPlayerUse(player);
     }
@@ -74,10 +72,18 @@ public class BoilerScreenHandler extends ScreenHandler {
 
                 slot.onStackChanged(itemStack2, itemStack);
             } else if (index != 0) {
-                if (!this.insertItem(itemStack2, 0, 1, false)) {
+                if (this.isSmeltable(itemStack2)) {
+                    if (!this.insertItem(itemStack2, 0, 1, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index >= 1 && index < hotbarStart) {
+                    if (!this.insertItem(itemStack2, hotbarStart, hotbarEnd, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index >= hotbarStart && index < hotbarEnd && !this.insertItem(itemStack2, inventoryEnd, hotbarStart, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack2, this.inventoryStart, this.hotbarEnd, false)) {
+            } else if (!this.insertItem(itemStack2, inventoryEnd, hotbarEnd, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -95,6 +101,10 @@ public class BoilerScreenHandler extends ScreenHandler {
         }
 
         return itemStack;
+    }
+
+    protected boolean isSmeltable(ItemStack itemStack) {
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(itemStack), this.world).isPresent();
     }
 
     @Environment(EnvType.CLIENT)

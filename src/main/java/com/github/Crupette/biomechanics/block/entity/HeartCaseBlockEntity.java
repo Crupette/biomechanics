@@ -1,10 +1,12 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
 import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
 import com.github.Crupette.biomechanics.util.tree.GenericTree;
 import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -15,8 +17,10 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -30,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class HeartCaseBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable, Biological {
+public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, Biological {
     private static final int[] TOP_SLOTS = new int[]{0, 1, 2, 3};
     private static final int[] BOTTOM_SLOTS = new int[]{4, 5};
     private static final int[] SIDE_SLOTS = new int[]{1, 2, 3};
@@ -98,13 +102,18 @@ public class HeartCaseBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    protected Text getContainerName() {
-        return new TranslatableText("container.biomechanics.heart_case");
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.pos);
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new HeartCaseScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+    public Text getDisplayName() {
+        return Biomechanics.getTranslated("container", "heart_case");
+    }
+
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        return new HeartCaseScreenHandler(syncId, inv, this, this.propertyDelegate);
     }
 
     @Override

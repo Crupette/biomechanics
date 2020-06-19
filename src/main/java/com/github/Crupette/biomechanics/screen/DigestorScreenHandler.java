@@ -25,7 +25,7 @@ public class DigestorScreenHandler extends ScreenHandler {
     private final int hotbarEnd;
 
     public DigestorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(null, syncId);
+        super(BiomechanicsScreenTypes.DIGESTOR, syncId);
         checkSize(inventory, 2);
         checkDataCount(propertyDelegate, 3);
         this.inventory = inventory;

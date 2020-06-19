@@ -36,19 +36,10 @@ public class HeartCaseBlock extends FacingWithEntity {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         } else {
-            ContainerProviderRegistry.INSTANCE.openContainer(Biomechanics.identify("heart_case"), player, buf -> buf.writeBlockPos(pos));
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            player.openHandledScreen((HeartCaseBlockEntity)blockEntity);
             return ActionResult.CONSUME;
         }
-    }
-
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof HeartCaseBlockEntity) {
-                ((HeartCaseBlockEntity)blockEntity).setCustomName(itemStack.getName());
-            }
-        }
-
     }
 
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

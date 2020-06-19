@@ -1,13 +1,16 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.block.SqueezerBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.SqueezerScreenHandler;
 import com.github.Crupette.biomechanics.tag.BiomechanicsTags;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,9 +20,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -30,7 +35,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.Iterator;
 
-public class SqueezerBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable {
+public class SqueezerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable {
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[]{2, 1};
     private static final int[] SIDE_SLOTS = new int[]{1};
@@ -114,13 +119,18 @@ public class SqueezerBlockEntity extends LockableContainerBlockEntity implements
     }
 
     @Override
-    protected Text getContainerName() {
-        return new TranslatableText("container.biomechanics.squeezer");
+    public Text getDisplayName() {
+        return Biomechanics.getTranslated("container", "squeezer");
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new SqueezerScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        return new SqueezerScreenHandler(syncId, inv, this, this.propertyDelegate);
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.pos);
     }
 
     public void tick() {

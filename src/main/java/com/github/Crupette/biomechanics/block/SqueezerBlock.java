@@ -43,23 +43,14 @@ public class SqueezerBlock extends BlockWithEntity {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         } else {
-            ContainerProviderRegistry.INSTANCE.openContainer(Biomechanics.identify("squeezer"), player, buf -> buf.writeBlockPos(pos));
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            player.openHandledScreen((SqueezerBlockEntity)blockEntity);
             return ActionResult.CONSUME;
         }
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
-    }
-
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof SqueezerBlockEntity) {
-                ((SqueezerBlockEntity)blockEntity).setCustomName(itemStack.getName());
-            }
-        }
-
     }
 
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

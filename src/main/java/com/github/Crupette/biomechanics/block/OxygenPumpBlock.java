@@ -36,19 +36,10 @@ public class OxygenPumpBlock extends FacingWithEntity {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         } else {
-            ContainerProviderRegistry.INSTANCE.openContainer(Biomechanics.identify("oxygen_pump"), player, buf -> buf.writeBlockPos(pos));
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            player.openHandledScreen((OxygenPumpBlockEntity)blockEntity);
             return ActionResult.CONSUME;
         }
-    }
-
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof OxygenPumpBlockEntity) {
-                ((OxygenPumpBlockEntity)blockEntity).setCustomName(itemStack.getName());
-            }
-        }
-
     }
 
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

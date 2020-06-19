@@ -1,5 +1,6 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.block.HeartCaseBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.HeartCaseScreenHandler;
@@ -7,6 +8,7 @@ import com.github.Crupette.biomechanics.screen.OxygenPumpScreenHandler;
 import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
 import com.github.Crupette.biomechanics.util.tree.GenericTree;
 import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -17,8 +19,10 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -32,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable, Biological{
+public class OxygenPumpBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, Biological{
     private static final int[] TOP_SLOTS = new int[]{0, 1};
     private static final int[] SIDE_SLOTS = new int[]{0, 1};
     protected DefaultedList<ItemStack> inventory;
@@ -79,13 +83,18 @@ public class OxygenPumpBlockEntity extends LockableContainerBlockEntity implemen
     }
 
     @Override
-    protected Text getContainerName() {
-        return new TranslatableText("container.biomechanics.oxygen_pump");
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.pos);
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new OxygenPumpScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+    public Text getDisplayName() {
+        return Biomechanics.getTranslated("container", "oxygen_pump");
+    }
+
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        return new OxygenPumpScreenHandler(syncId, inv, this, this.propertyDelegate);
     }
 
     @Override

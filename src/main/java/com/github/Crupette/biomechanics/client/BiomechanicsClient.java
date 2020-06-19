@@ -17,29 +17,15 @@ import net.minecraft.text.TranslatableText;
 
 @Environment(EnvType.CLIENT)
 public class BiomechanicsClient implements ClientModInitializer {
+
     @Override
     public void onInitializeClient() {
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("squeezer"), (container) -> {
-            return new SqueezerScreen((SqueezerScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.squeezer"));
-        });
+        ScreenRegistry.register(BiomechanicsScreenTypes.SQUEEZER, SqueezerScreen::new);
+        ScreenRegistry.register(BiomechanicsScreenTypes.HEART_CASE, HeartCaseScreen::new);
+        ScreenRegistry.register(BiomechanicsScreenTypes.OXYGEN_PUMP, OxygenPumpScreen::new);
+        ScreenRegistry.register(BiomechanicsScreenTypes.DIGESTOR, DigestorScreen::new);
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("heart_case"), (container) -> {
-            return new HeartCaseScreen((HeartCaseScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.heart_case"));
-        });
-
-        ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("oxygen_pump"), (container) -> {
-            return new OxygenPumpScreen((OxygenPumpScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.oxygen_pump"));
-        });
-
-        ScreenProviderRegistry.INSTANCE.registerFactory(Biomechanics.identify("digestor"), (container) -> {
-            return new DigestorScreen((DigestorScreenHandler) container, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.digestor"));
-        });
-
-        ScreenRegistry.register(BiomechanicsScreenTypes.BOILER, (ScreenRegistry.Factory<BoilerScreenHandler, BoilerScreen>) (boilerScreenHandler, playerInventory, text) -> {
-            return new BoilerScreen(boilerScreenHandler, MinecraftClient.getInstance().player.inventory, new TranslatableText("container.biomechanics.boiler"));
-        });
-
-        BiomechanicsScreenTypes.BOILER = ScreenHandlerRegistry.registerSimple(Biomechanics.identify("boiler"), BoilerScreenHandler::new);
+        ScreenRegistry.register(BiomechanicsScreenTypes.BOILER, BoilerScreen::new);
     }
 }

@@ -6,6 +6,8 @@ import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.recipe.BiomechanicsRecipes;
 import com.github.Crupette.biomechanics.screen.BiomechanicsScreenTypes;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +22,10 @@ public class Biomechanics implements ModInitializer {
 
     public static Identifier identify(String path) {
         return new Identifier(MOD_ID, path);
+    }
+
+    public static Text getTranslated(String base, String name) {
+        return new TranslatableText(base + "." + MOD_ID + "." + name);
     }
 
     @Override

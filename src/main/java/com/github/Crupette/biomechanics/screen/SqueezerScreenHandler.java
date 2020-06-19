@@ -26,7 +26,7 @@ public class SqueezerScreenHandler extends ScreenHandler {
     private final int hotbarEnd;
 
     public SqueezerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(null, syncId);
+        super(BiomechanicsScreenTypes.SQUEEZER, syncId);
         checkSize(inventory, 4);
         checkDataCount(propertyDelegate, 5);
         this.inventory = inventory;

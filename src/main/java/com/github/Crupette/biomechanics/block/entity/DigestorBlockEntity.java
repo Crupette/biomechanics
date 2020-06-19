@@ -1,10 +1,13 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.block.DigestorBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.DigestorScreenHandler;
 import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,8 +15,10 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -25,7 +30,7 @@ import net.minecraft.util.math.Direction;
 
 import java.util.Iterator;
 
-public class DigestorBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable, Biological{
+public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, Biological{
     private static final int[] TOP_SLOTS = new int[]{0, 1, 2, 3};
     private static final int[] SIDE_SLOTS = new int[]{0, 1, 2, 3};
     protected DefaultedList<ItemStack> inventory;
@@ -92,13 +97,18 @@ public class DigestorBlockEntity extends LockableContainerBlockEntity implements
     }
 
     @Override
-    protected Text getContainerName() {
-        return new TranslatableText("container.biomechanics.digestor");
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.pos);
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new DigestorScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+    public Text getDisplayName() {
+        return Biomechanics.getTranslated("container", "digestor");
+    }
+
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        return new DigestorScreenHandler(syncId, inv, this, this.propertyDelegate);
     }
 
     @Override

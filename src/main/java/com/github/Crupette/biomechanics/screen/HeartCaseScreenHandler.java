@@ -21,7 +21,7 @@ public class HeartCaseScreenHandler extends ScreenHandler {
     private final int hotbarEnd;
 
     public HeartCaseScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(null, syncId);
+        super(BiomechanicsScreenTypes.HEART_CASE, syncId);
         checkSize(inventory, 6);
         checkDataCount(propertyDelegate, 5);
         this.inventory = inventory;

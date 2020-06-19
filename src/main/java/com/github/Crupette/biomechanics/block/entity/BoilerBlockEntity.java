@@ -1,5 +1,6 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.block.BoilerBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.BoilerScreenHandler;
@@ -8,6 +9,7 @@ import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,11 +19,13 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -34,7 +38,7 @@ import net.minecraft.util.math.Direction;
 import java.util.Iterator;
 import java.util.Optional;
 
-public class BoilerBlockEntity extends LockableContainerBlockEntity implements SidedInventory, Tickable, Biological {
+public class BoilerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, Biological {
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] SIDE_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[] {1};
@@ -84,16 +88,6 @@ public class BoilerBlockEntity extends LockableContainerBlockEntity implements S
                 return 3;
             }
         };
-    }
-
-    @Override
-    protected Text getContainerName() {
-        return new TranslatableText("container.biomechanics.boiler");
-    }
-
-    @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new BoilerScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
 
     @Override
@@ -148,6 +142,7 @@ public class BoilerBlockEntity extends LockableContainerBlockEntity implements S
         ItemStack itemStack = this.inventory.get(slot);
         if(slot == 0){
             this.currentRecipe = null;
+            this.cookTime = 0;
             this.ignoreChecks = false;
         }
         this.inventory.set(slot, stack);
@@ -295,4 +290,18 @@ public class BoilerBlockEntity extends LockableContainerBlockEntity implements S
 
     }
 
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.pos);
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return Biomechanics.getTranslated("container", "boiler");
+    }
+
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        return new BoilerScreenHandler(syncId, inv, this, this.propertyDelegate);
+    }
 }

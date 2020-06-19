@@ -45,16 +45,6 @@ public class BoilerBlock extends FacingWithEntity {
         }
     }
 
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BoilerBlockEntity) {
-                ((BoilerBlockEntity)blockEntity).setCustomName(itemStack.getName());
-            }
-        }
-
-    }
-
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);

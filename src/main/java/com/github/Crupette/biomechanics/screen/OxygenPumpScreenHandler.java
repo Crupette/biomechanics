@@ -27,7 +27,7 @@ public class OxygenPumpScreenHandler extends ScreenHandler {
     private final int hotbarEnd;
 
     public OxygenPumpScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(null, syncId);
+        super(BiomechanicsScreenTypes.OXYGEN_PUMP, syncId);
         checkSize(inventory, 2);
         checkDataCount(propertyDelegate, 3);
         this.inventory = inventory;
