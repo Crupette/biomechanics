@@ -166,6 +166,10 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
         if (stack.getCount() > this.getMaxCountPerStack()) {
             stack.setCount(this.getMaxCountPerStack());
         }
+
+        if (slot == 0 && !bl) {
+            this.markDirty();
+        }
     }
 
     public boolean canPlayerUse(PlayerEntity player) {
@@ -209,6 +213,7 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
             }
             if(health < 0) {
                 organStack.decrement(1);
+                this.markDirty();
             }else {
                 CompoundTag tag = organStack.getTag();
                 tag.putInt("suffocationTicks", suffocationTicks);
@@ -258,6 +263,7 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
 
     @Override
     public void tick() {
+        boolean dirty = false;
         if(!world.isClient){
             if(this.network == null){
                 damageOrgans();
@@ -294,6 +300,9 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
                 if(this.storedCalories > this.storedMaximum) this.storedCalories = this.storedMaximum;
 
                 if(this.processingCalories == 0){
+                    if(this.processingMaximum != 0){
+                        dirty = true;
+                    }
                     if(!foodStack.isEmpty()){
                         this.processingCalories +=
                                 foodStack.getItem().getFoodComponent().getHunger() *
@@ -301,8 +310,13 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
                                 2500;
                         this.processingMaximum = this.processingCalories;
                         foodStack.decrement(1);
+                    }else{
+                        this.processingMaximum = 0;
                     }
                 }
+            }
+            if(dirty){
+                this.markDirty();
             }
         }
     }

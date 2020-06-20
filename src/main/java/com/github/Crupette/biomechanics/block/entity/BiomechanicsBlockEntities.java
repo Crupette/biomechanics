@@ -3,6 +3,7 @@ package com.github.Crupette.biomechanics.block.entity;
 import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.block.BiomechanicsBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.registry.Registry;
 
@@ -29,6 +30,8 @@ public class BiomechanicsBlockEntities {
     public static final BlockEntityType<MaceratorBlockEntity> MACERATOR =
             BlockEntityType.Builder.create(MaceratorBlockEntity::new, new Block[]{BiomechanicsBlocks.MACERATOR}).build(null);
 
+    public static final BlockEntityType<FleshyHopperBlockEntity> FLESHY_HOPPER =
+            BlockEntityType.Builder.create(FleshyHopperBlockEntity::new, new Block[]{BiomechanicsBlocks.FLESHY_HOPPER}).build(null);
 
     public static void init(){
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("squeezer"), SQUEEZER);
@@ -38,7 +41,9 @@ public class BiomechanicsBlockEntities {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("boiler"), BOILER);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("blood_vessel"), BLOOD_VESSEL);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("fleshy_hopper"), FLESHY_HOPPER);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("macerator"), MACERATOR);
+
     }
 }

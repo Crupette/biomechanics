@@ -25,6 +25,8 @@ public class BiomechanicsBlocks {
     public static final Block BLOOD_VESSEL = new BloodVesselBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).sounds(BlockSoundGroup.HONEY));
     public static final Block MACERATOR = new MaceratorBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).sounds(BlockSoundGroup.HONEY));
 
+    public static final Block FLESHY_HOPPER = new FleshyHopperBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).sounds(BlockSoundGroup.HONEY));
+
     private static void register(String name, Block block, Item.Settings settings){
         Registry.register(Registry.BLOCK, Biomechanics.identify(name), block);
         Registry.register(Registry.ITEM, Biomechanics.identify(name), new BlockItem(block, settings));
@@ -40,5 +42,6 @@ public class BiomechanicsBlocks {
         register("macerator", MACERATOR, new Item.Settings().group(ItemGroup.DECORATIONS));
 
         register("blood_vessel", BLOOD_VESSEL, new Item.Settings().group(ItemGroup.DECORATIONS));
+        register("fleshy_hopper", FLESHY_HOPPER, new Item.Settings().group(ItemGroup.REDSTONE));
     }
 }

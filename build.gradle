@@ -26,6 +26,9 @@ dependencies {
 	include "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
 
 	modRuntime "io.github.prospector:modmenu:1.12.1+build.15"
+
+	//modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:1.16-35.10-FABRIC:api"
+	modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:1.16-35.10-FABRIC"
 }
 
 processResources {
@@ -85,5 +88,6 @@ publishing {
 }
 
 repositories {
-	maven { url 'http://server.bbkr.space:8081/artifactory/libs-release' }
+	 maven { url 'http://server.bbkr.space:8081/artifactory/libs-release' }
+	 maven { url 'https://maven.blamejared.com' }
 }

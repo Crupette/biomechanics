@@ -497,7 +497,6 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
         this.depletedBottlesNeeded = 1;
 
         if(this.addConnection(this.pos.down(), this.connectionTree.getRoot(), null, Direction.DOWN)){
-            System.out.println("System is closed");
             this.setConnections(this.pos);
 
             for(BlockPos pos : this.connected){
@@ -507,7 +506,6 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
                 this.network.addChild(this.world.getBlockEntity(pos));
             }
         }else{
-            System.out.println("System is not closed");
             this.connected.clear();
             this.connectionTree.setRoot(null);
         }

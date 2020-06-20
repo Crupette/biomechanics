@@ -156,9 +156,13 @@ public class MaceratorBlockEntity extends BlockEntity implements SidedInventory,
                 }
             }
 
-            if(this.processingTimer > 0 && !world.isClient) {
-                int calories = this.network.requestCalories(16);
-                int oxygen = this.network.requestOxygen(12);
+            if(this.processingTimer > 0) {
+                int calories = 16;
+                int oxygen = 12;
+                if(!world.isClient) {
+                    calories = this.network.requestCalories(16);
+                    oxygen = this.network.requestOxygen(12);
+                }
                 if(calories >= 16 && oxygen >= 12) {
                     this.processingTimer--;
                     if(this.processingTimer % 5 == 0){

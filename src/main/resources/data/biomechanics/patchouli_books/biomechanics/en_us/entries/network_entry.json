@@ -1,0 +1,27 @@
+{
+  "name": "Circulatory System",
+  "icon": "biomechanics:blood_bottle",
+  "category": "biomechanics:the_body",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Every circulatory system requires it's components to receive an adequate amount of both oxygen and calories to function to it's fullest. $(br2)The networks created by this system allows simple meat to behave similarly to complex non-biological machinery. This includes ore duplication and smelting"
+    },
+    {
+      "type": "text",
+      "text": "$(l)Flow:$(br)$()Blood takes the shortest possible path from the bottom of the heart case to the top. As a result, the network only recognizes the first path it can find from the heart case. Blood flow originates from the bottom of the heart case, representing the major artery exiting the heart. the flow continues in a closed loop through all materials considered \"organic\" until it reaches the top of the heart case, the major vein"
+    },
+    {
+      "type": "text",
+      "text": "$(l)Circulation:$(br)$()To pass resources to every part of the circulatory system, some form of blood circulation is required. When a heart beats, provider organs give resources to the blood, until the blood reaches maximum capacity. The blood then circulates towards demanding organs, where resources are taken from the blood. If the concentration of resources reaches a critical point, the network will request the provider organs to beat / breathe. "
+    },
+    {
+      "type": "text",
+      "text": "$(l)Calories:$(br)$()The major resource that all organs require are calories. This resource is slightly based on real world calories, except that the numbers required are most analogous to 1/1000th calories. The organ block that provide these calories is the Digestor, which is fed food items"
+    },
+    {
+      "type": "text",
+      "text": "$(l)Oxygen:$(br)$()The secondary resource that all organs require is oxygen. This resource is renewable, unlike calories, and can easily be retrieved through the lungs."
+    }
+  ]
+}

@@ -80,7 +80,6 @@ public class OxygenPumpScreenHandler extends ScreenHandler {
                 slot.onStackChanged(itemStack2, itemStack);
             } else if (index != 0 && index != 1 && index != 2) {
                 if (itemStack2.getItem() == BiomechanicsItems.LUNGS) {
-                    System.out.println(itemStack2.getItem() + " : " + BiomechanicsItems.LUNGS);
                     if (!this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

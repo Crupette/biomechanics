@@ -1,0 +1,9 @@
+{
+  "parent": "block/hopper",
+  "textures": {
+    "particle": "biomechanics:block/fleshy_hopper/outside",
+    "top": "biomechanics:block/fleshy_hopper/top",
+    "side": "biomechanics:block/fleshy_hopper/outside",
+    "inside": "biomechanics:block/fleshy_hopper/inside"
+  }
+}

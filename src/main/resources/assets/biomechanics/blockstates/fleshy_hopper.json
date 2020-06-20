@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "biomechanics:block/fleshy_hopper"
+    },
+    "facing=east": {
+      "model": "biomechanics:block/fleshy_hopper_side",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "biomechanics:block/fleshy_hopper_side"
+    },
+    "facing=south": {
+      "model": "biomechanics:block/fleshy_hopper_side",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "biomechanics:block/fleshy_hopper_side",
+      "y": 270
+    }
+  }
+}
