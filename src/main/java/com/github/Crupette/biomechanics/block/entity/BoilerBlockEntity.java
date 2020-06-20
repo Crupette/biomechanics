@@ -38,7 +38,7 @@ import net.minecraft.util.math.Direction;
 import java.util.Iterator;
 import java.util.Optional;
 
-public class BoilerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, Biological {
+public class BoilerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, BiologicalNetworked {
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] SIDE_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[] {1};

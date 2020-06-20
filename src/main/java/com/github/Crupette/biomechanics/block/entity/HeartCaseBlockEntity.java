@@ -7,6 +7,7 @@ import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
 import com.github.Crupette.biomechanics.util.tree.GenericTree;
 import com.github.Crupette.biomechanics.util.tree.GenericTreeNode;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, Biological {
+public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, BiologicalNetworked {
     private static final int[] TOP_SLOTS = new int[]{0, 1, 2, 3};
     private static final int[] BOTTOM_SLOTS = new int[]{4, 5};
     private static final int[] SIDE_SLOTS = new int[]{1, 2, 3};
@@ -414,6 +415,9 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
                 if(blockEntity instanceof Biological){
                     ((Biological)blockEntity).setParent(to);
                 }
+                if(blockEntity instanceof BiologicalAdjacent){
+                    ((BiologicalAdjacent)blockEntity).setParent(to);
+                }
             }
         }));
     }
@@ -442,7 +446,7 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
         if(this.world == null) return false;
         BlockEntity check = this.world.getBlockEntity(pos);
         if(check == null) return false;
-        if(!(check instanceof Biological)) return false;
+        if(!(check instanceof BiologicalNetworked)) return false;
 
         if(((Biological)check).getParent() != null && ((Biological)check).getParent() != this.pos) return false;
 
@@ -497,14 +501,22 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
         this.depletedBottlesNeeded = 1;
 
         if(this.addConnection(this.pos.down(), this.connectionTree.getRoot(), null, Direction.DOWN)){
-            this.setConnections(this.pos);
-
             for(BlockPos pos : this.connected){
                 this.saturatedBottlesNeeded++;
                 this.depletedBottlesNeeded++;
 
                 this.network.addChild(this.world.getBlockEntity(pos));
+
+                for(Direction direction : Direction.values()){
+                    BlockPos newPos = pos.add(direction.getVector());
+                    BlockEntity blockEntity = this.world.getBlockEntity(newPos);
+                    if(blockEntity instanceof BiologicalAdjacent){
+                        this.network.addChild(blockEntity);
+                        ((BiologicalAdjacent)blockEntity).setParent(this.pos);
+                    }
+                }
             }
+            this.setConnections(this.pos);
         }else{
             this.connected.clear();
             this.connectionTree.setRoot(null);

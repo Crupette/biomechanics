@@ -1,6 +1,7 @@
 package com.github.Crupette.biomechanics.util.network;
 
 import com.github.Crupette.biomechanics.block.entity.Biological;
+import com.github.Crupette.biomechanics.block.entity.BiologicalAdjacent;
 import com.github.Crupette.biomechanics.block.entity.HeartCaseBlockEntity;
 import com.github.Crupette.biomechanics.block.entity.OxygenPumpBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -31,11 +32,13 @@ public class CirculatoryNetwork {
     }
 
     public void addChild(BlockEntity entity){
-        this.children.add(entity);
-        if(entity instanceof OxygenPumpBlockEntity){
-            this.lungs.add((OxygenPumpBlockEntity) entity);
+        if(!this.children.contains(entity)) {
+            this.children.add(entity);
+            if (entity instanceof OxygenPumpBlockEntity) {
+                this.lungs.add((OxygenPumpBlockEntity) entity);
+            }
+            this.calorieStorageCapacity += ((Biological) entity).getCalorieStorageCapacity();
         }
-        this.calorieStorageCapacity += ((Biological)entity).getCalorieStorageCapacity();
     }
 
     public void removeChild(BlockEntity entity){
@@ -59,26 +62,30 @@ public class CirculatoryNetwork {
         this.calorieStorage += (this.bloodCalories / 2);
         this.bloodCalories /= 2;
 
-        if(this.calorieStorage < 0) this.calorieStorage = 0;
-
-        if(this.bloodCalories == 0){
-            if(this.calorieOverflow > 0){
-                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieOverflow);
-                this.bloodCalories += transfer;
-                this.calorieOverflow -= transfer;
-            }else {
-                int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieStorage);
-                this.bloodCalories += transfer;
-                this.calorieStorage -= transfer;
-            }
+        //Transfer some calories from fat stores
+        if(this.calorieOverflow > 0){
+            int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieOverflow) - this.bloodCalories;
+            if(transfer < 0) return;
+            this.bloodCalories += transfer;
+            this.calorieOverflow -= transfer;
+        }else {
+            int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieStorage) - this.bloodCalories;
+            if(transfer < 0) return;
+            this.bloodCalories += transfer;
+            this.calorieStorage -= transfer;
         }
 
+        //Make sure no weird underflow happens
+        if(this.calorieStorage < 0) this.calorieStorage = 0;
+
+        //Convert damaging fat to normal fat when space is made
         if(this.calorieStorage != this.calorieStorageCapacity && this.calorieOverflow > 0){
             int transfer = Math.min(this.calorieOverflow, this.calorieStorageCapacity - this.calorieStorage);
             this.calorieStorage += transfer;
             this.calorieOverflow -= transfer;
         }
 
+        //Convert excess calories to damaging calories
         if(this.calorieStorage > this.calorieStorageCapacity){
             this.calorieOverflow += this.calorieStorage - this.calorieStorageCapacity;
             this.calorieStorage = this.calorieStorageCapacity;

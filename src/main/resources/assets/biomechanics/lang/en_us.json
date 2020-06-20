@@ -201,12 +201,15 @@
     "item.biomechanics.blood_bottle": "Blood Bottle",
     "item.biomechanics.scalpel": "Scalpel",
 
+    "block.biomechanics.squeezer": "Squeezer",
     "block.biomechanics.heart_case": "Heart Case",
     "block.biomechanics.oxygen_pump": "Oxygen Pump",
     "block.biomechanics.digestor": "Digestor",
     "block.biomechanics.blood_vessel": "Blood Vessel",
     "block.biomechanics.macerator": "Macerator",
     "block.biomechanics.boiler": "Boiler",
+    "block.biomechanics.fleshy_hopper": "Fleshy Hopper",
+    "block.biomechanics.photosynthesizer": "Photosynthesizer",
 
     "tooltip.biomechanics.organ_health": "Health:"
 }

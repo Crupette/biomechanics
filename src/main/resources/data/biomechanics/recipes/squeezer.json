@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PIP",
+    "IGI",
+    "IFI"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "item": "biomechanics:squeezer",
+    "count": 1
+  }
+}

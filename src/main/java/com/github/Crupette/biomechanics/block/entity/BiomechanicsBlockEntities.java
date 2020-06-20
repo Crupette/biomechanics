@@ -33,6 +33,11 @@ public class BiomechanicsBlockEntities {
     public static final BlockEntityType<FleshyHopperBlockEntity> FLESHY_HOPPER =
             BlockEntityType.Builder.create(FleshyHopperBlockEntity::new, new Block[]{BiomechanicsBlocks.FLESHY_HOPPER}).build(null);
 
+    public static final BlockEntityType<PhotosynthesizerBlockEntity> PHOTOSYNTHESIZER =
+            BlockEntityType.Builder.create(PhotosynthesizerBlockEntity::new, new Block[]{BiomechanicsBlocks.PHOTOSYNTHESIZER}).build(null);
+
+
+
     public static void init(){
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("squeezer"), SQUEEZER);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("heart_case"), HEART_CASE);
@@ -44,6 +49,8 @@ public class BiomechanicsBlockEntities {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("fleshy_hopper"), FLESHY_HOPPER);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("macerator"), MACERATOR);
+
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("photosynthesizer"), PHOTOSYNTHESIZER);
 
     }
 }

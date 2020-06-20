@@ -5,7 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 
-public class BloodVesselBlockEntity extends BlockEntity implements Biological {
+public class BloodVesselBlockEntity extends BlockEntity implements BiologicalNetworked {
     public BlockPos parent;
     private CirculatoryNetwork network;
 

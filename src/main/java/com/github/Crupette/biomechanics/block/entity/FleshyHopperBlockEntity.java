@@ -37,7 +37,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class FleshyHopperBlockEntity extends LootableContainerBlockEntity implements NamedScreenHandlerFactory, Hopper, Tickable, Biological{
+public class FleshyHopperBlockEntity extends LootableContainerBlockEntity implements NamedScreenHandlerFactory, Hopper, Tickable, BiologicalNetworked{
     private BlockPos parent = null;
     private CirculatoryNetwork network = null;
 

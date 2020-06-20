@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MaceratorBlockEntity extends BlockEntity implements SidedInventory, Tickable, Biological {
+public class MaceratorBlockEntity extends BlockEntity implements SidedInventory, Tickable, BiologicalNetworked {
 
     private CirculatoryNetwork network = null;
     private BlockPos parent = null;

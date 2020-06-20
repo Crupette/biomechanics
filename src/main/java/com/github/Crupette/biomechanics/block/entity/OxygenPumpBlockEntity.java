@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class OxygenPumpBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, Biological{
+public class OxygenPumpBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, BiologicalNetworked {
     private static final int[] TOP_SLOTS = new int[]{0, 1};
     private static final int[] SIDE_SLOTS = new int[]{0, 1};
     protected DefaultedList<ItemStack> inventory;

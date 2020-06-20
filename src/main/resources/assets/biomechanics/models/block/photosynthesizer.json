@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "particle": "biomechanics:block/photosynthesizer/top",
+    "up": "biomechanics:block/photosynthesizer/top",
+    "down": "minecraft:block/iron_block",
+    "north": "minecraft:block/iron_block",
+    "south": "minecraft:block/iron_block",
+    "east": "minecraft:block/iron_block",
+    "west": "minecraft:block/iron_block"
+  }
+}
