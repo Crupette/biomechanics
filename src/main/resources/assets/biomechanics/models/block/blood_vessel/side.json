@@ -1,0 +1,20 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "texture": "biomechanics:block/meat",
+    "inside": "biomechanics:block/meat",
+    "particle": "biomechanics:block/meat"
+  },
+  "elements": [
+    {   "from": [ 3, 3, 0 ],
+      "to": [ 13, 13, 3 ],
+      "faces": {
+        "down":  { "texture": "#texture" },
+        "up":    { "texture": "#texture" },
+        "north": { "texture": "#texture", "cullface":"north" },
+        "west":  { "texture": "#texture" },
+        "east":  { "texture": "#texture" }
+      }
+    }
+  ]
+}

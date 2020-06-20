@@ -1,7 +1,67 @@
 {
-  "variants": {
-    "": {
-      "model": "biomechanics:block/blood_vessel"
+  "multipart": [
+    {
+      "apply": {
+        "model": "biomechanics:block/blood_vessel/center"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "biomechanics:block/blood_vessel/side"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "biomechanics:block/blood_vessel/side",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "biomechanics:block/blood_vessel/side",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "biomechanics:block/blood_vessel/side",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "biomechanics:block/blood_vessel/side",
+        "x": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "biomechanics:block/blood_vessel/side",
+        "x": 90,
+        "uvlock": true
+      }
     }
-  }
+  ]
 }

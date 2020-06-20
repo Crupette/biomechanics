@@ -1,0 +1,22 @@
+{   "parent": "block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "texture": "biomechanics:block/meat",
+    "inside": "biomechanics:block/meat",
+    "particle": "biomechanics:block/meat"
+  },
+  "elements": [
+    {
+      "from": [ 3, 3, 3 ],
+      "to": [ 13, 13, 13 ],
+      "faces": {
+        "down":  { "uv": [ 13, 13, 3, 3 ], "texture": "#inside" },
+        "up":    { "uv": [ 3, 3, 13, 13 ], "texture": "#inside" },
+        "north": { "uv": [ 3, 3, 13, 13 ], "texture": "#inside" },
+        "south": { "uv": [ 3, 3, 13, 13 ], "texture": "#inside" },
+        "west":  { "uv": [ 3, 3, 13, 13 ], "texture": "#inside" },
+        "east":  { "uv": [ 3, 3, 13, 13 ], "texture": "#inside" }
+      }
+    }
+  ]
+}
