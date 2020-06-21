@@ -20,7 +20,6 @@ public class PhotosynthesizerBlockEntity extends BlockEntity implements Biologic
 
     @Override
     public void setParent(BlockPos pos) {
-        System.out.println("Setting parent");
         this.parent = pos;
         if(pos != null){
             this.network = ((HeartCaseBlockEntity)this.world.getBlockEntity(pos)).network;
@@ -29,7 +28,7 @@ public class PhotosynthesizerBlockEntity extends BlockEntity implements Biologic
 
     @Override
     public int getCalorieStorageCapacity() {
-        return 2048;
+        return 512;
     }
 
     @Override

@@ -265,7 +265,7 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
             this.updateConnectionTree();
         }
 
-        if(!world.isClient){
+        if(!world.isClient && this.depletedBottles == this.depletedBottlesNeeded && this.saturatedBottles == this.saturatedBottlesNeeded){
             ItemStack heartStack = this.inventory.get(0);
 
             if(!heartStack.isEmpty()) {
@@ -436,7 +436,6 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
         StringBuilder sb = new StringBuilder("");
         for(int i = 0; i < depth; i++) sb.append(" ");
         sb.append(node.getData().pos + " : " + node.getData().flow);
-        System.out.println(sb.toString());
         for(GenericTreeNode<Connection> child : node.getChildren()){
             printTree(child, depth + 1);
         }
