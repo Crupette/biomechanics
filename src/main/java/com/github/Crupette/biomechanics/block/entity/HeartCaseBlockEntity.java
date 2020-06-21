@@ -265,10 +265,10 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
             this.updateConnectionTree();
         }
 
-        if(!world.isClient && this.depletedBottles == this.depletedBottlesNeeded && this.saturatedBottles == this.saturatedBottlesNeeded){
+        if(!world.isClient){
             ItemStack heartStack = this.inventory.get(0);
 
-            if(!heartStack.isEmpty()) {
+            if(!heartStack.isEmpty() && this.depletedBottles == this.depletedBottlesNeeded && this.saturatedBottles == this.saturatedBottlesNeeded) {
                 ItemStack organStack = this.inventory.get(0);
 
                 int heartHealth = organStack.getOrCreateTag().getInt("health");

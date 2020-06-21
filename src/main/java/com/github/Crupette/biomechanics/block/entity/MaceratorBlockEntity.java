@@ -1,5 +1,6 @@
 package com.github.Crupette.biomechanics.block.entity;
 
+import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.block.MaceratorBlock;
 import com.github.Crupette.biomechanics.recipe.BiomechanicsRecipes;
 import com.github.Crupette.biomechanics.recipe.MaceratorRecipe;
@@ -27,6 +28,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,21 +79,6 @@ public class MaceratorBlockEntity extends BlockEntity implements SidedInventory,
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
-        return new int[0];
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, Direction dir) {
-        return true;
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return false;
-    }
-
-    @Override
     public int size() {
         return 1;
     }
@@ -115,11 +102,15 @@ public class MaceratorBlockEntity extends BlockEntity implements SidedInventory,
     @Override
     public ItemStack removeStack(int slot) {
         this.processingStack = ItemStack.EMPTY;
+        this.processingTimer = 0;
+        this.currentRecipe = null;
         return this.processingStack;
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
+        this.processingTimer = 0;
+        this.currentRecipe = null;
         this.processingStack = stack;
     }
 
@@ -131,6 +122,8 @@ public class MaceratorBlockEntity extends BlockEntity implements SidedInventory,
             return player.squaredDistanceTo((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
         }
     }
+
+
 
     @Override
     public void clear() {
@@ -252,5 +245,21 @@ public class MaceratorBlockEntity extends BlockEntity implements SidedInventory,
         tag.putInt("spitTimer", this.spitTimer);
 
         return super.toTag(tag);
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        int slots[] = { 0 };
+        return slots;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, Direction dir) {
+        return true;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return false;
     }
 }

@@ -39,7 +39,13 @@ public class MaceratorBlock extends FacingWithEntity{
             }else{
                 ItemStack holdingStack = player.getStackInHand(hand);
                 ItemStack maceratorStack = mblockEntity.getStack(0);
-                if(holdingStack.isEmpty()) return ActionResult.CONSUME;
+                if(holdingStack.isEmpty()){
+                    if(player.isSneaking()){
+                        player.setStackInHand(hand, mblockEntity.getStack(0).copy());
+                        mblockEntity.setStack(0, ItemStack.EMPTY);
+                    }
+                    return ActionResult.CONSUME;
+                }
                 if(maceratorStack.isEmpty()){
                     mblockEntity.setStack(0, holdingStack.copy());
                     player.setStackInHand(hand, ItemStack.EMPTY);
