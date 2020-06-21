@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    "BIB",
+    "IOI"
+  ],
+  "key": {
+    "O": {
+      "item": "biomehcanics:blood_bottle"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "biomechanics:blood_vessel"
+    }
+  },
+  "result": {
+    "item": "biomechanics:macerator",
+    "count": 1
+  }
+}

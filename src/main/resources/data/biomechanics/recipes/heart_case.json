@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IBI",
+    "BRB",
+    "IBI"
+  ],
+  "key": {
+    "B": {
+      "item": "biomehcanics:blood_vessel"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "biomechanics:heart_case",
+    "count": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "ILI",
+    "IBI"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "L": {
+      "tag": "minecraft:leaves"
+    },
+    "B": {
+      "item": "biomechanics:blood_vessel"
+    }
+  },
+  "result": {
+    "item": "biomechanics:photosynthesizer",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "M M",
+    "MHM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "biomehcanics:meats"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    }
+  },
+  "result": {
+    "item": "biomechanics:fleshy_hopper",
+    "count": 1
+  }
+}

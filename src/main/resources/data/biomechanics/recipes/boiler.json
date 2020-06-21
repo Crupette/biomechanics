@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "BOB",
+    "BFB"
+  ],
+  "key": {
+    "O": {
+      "item": "biomehcanics:blood_bottle"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "B": {
+      "item": "biomechanics:blood_vessel"
+    }
+  },
+  "result": {
+    "item": "biomechanics:boiler",
+    "count": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "POP",
+    "IBI"
+  ],
+  "key": {
+    "O": {
+      "item": "biomehcanics:blood_bottle"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "B": {
+      "item": "biomechanics:blood_vessel"
+    }
+  },
+  "result": {
+    "item": "biomechanics:oxygen_pump",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MMM",
+    "BBB",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "item": "biomehcanics:blood_bottle"
+    },
+    "B": {
+      "tag": "biomechanics:meat"
+    }
+  },
+  "result": {
+    "item": "biomechanics:blood_vessel",
+    "count": 6
+  }
+}
