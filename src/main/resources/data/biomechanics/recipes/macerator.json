@@ -2,18 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "BBB",
-    "BIB",
+    "BDB",
     "IOI"
   ],
   "key": {
     "O": {
-      "item": "biomehcanics:blood_bottle"
+      "item": "biomechanics:blood_bottle"
     },
     "I": {
       "item": "minecraft:iron_ingot"
     },
     "B": {
       "item": "biomechanics:blood_vessel"
+    },
+    "D": {
+      "item": "minecraft:diamond"
     }
   },
   "result": {

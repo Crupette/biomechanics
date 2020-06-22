@@ -7,10 +7,10 @@
   ],
   "key": {
     "M": {
-      "item": "biomehcanics:blood_bottle"
+      "item": "biomechanics:blood_bottle"
     },
     "B": {
-      "tag": "biomechanics:meat"
+      "tag": "biomechanics:meats"
     }
   },
   "result": {

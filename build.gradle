@@ -90,4 +90,5 @@ publishing {
 repositories {
 	 maven { url 'http://server.bbkr.space:8081/artifactory/libs-release' }
 	 maven { url 'https://maven.blamejared.com' }
+	maven { url 'https://jitpack.io' }
 }

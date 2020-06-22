@@ -5,6 +5,7 @@ import com.github.Crupette.biomechanics.block.DigestorBlock;
 import com.github.Crupette.biomechanics.item.BiomechanicsItems;
 import com.github.Crupette.biomechanics.screen.DigestorScreenHandler;
 import com.github.Crupette.biomechanics.util.network.CirculatoryNetwork;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -30,7 +31,7 @@ import net.minecraft.util.math.Direction;
 
 import java.util.Iterator;
 
-public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, SidedInventory, Tickable, BiologicalNetworked{
+public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, BlockEntityClientSerializable, SidedInventory, Tickable, BiologicalNetworked{
     private static final int[] TOP_SLOTS = new int[]{0, 1, 2, 3};
     private static final int[] SIDE_SLOTS = new int[]{0, 1, 2, 3};
     protected DefaultedList<ItemStack> inventory;
@@ -371,6 +372,36 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
     @Override
     public void onBeat() {
         this.storedCalories -= this.network.provideCalories(this.storedCalories);
+        if(!this.world.isClient){
+            this.sync();
+        }
     }
 
+    //Workaround to fix client-server GUI sync issues (if this can be done better please do a pull request / let me know)
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        Inventories.fromTag(tag, this.inventory);
+
+        this.storedCalories = tag.getInt("storedCalories");
+        this.storedMaximum = tag.getInt("storedMaximum");
+        this.processingCalories = tag.getInt("processingCalories");
+        this.processingMaximum = tag.getInt("processingMaximum");
+
+        if(this.network == null) this.network = new CirculatoryNetwork(null);
+        this.network.fromTag(tag);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        Inventories.toTag(tag, this.inventory);
+
+        tag.putInt("storedCalories", this.storedCalories);
+        tag.putInt("storedMaximum", this.storedMaximum);
+        tag.putInt("processingCalories", this.processingCalories);
+        tag.putInt("processingMaximum", this.processingMaximum);
+
+        this.network.toTag(tag);
+        return tag;
+    }
 }

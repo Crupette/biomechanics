@@ -2,7 +2,7 @@
   "parent": "minecraft:block/orientable",
   "textures": {
     "top": "biomechanics:block/heart_case/top",
-    "bottom": "biomechanics:block/heart_case/bottom",
+    "bottom": "biomechanics:block/meat",
     "front": "biomechanics:block/heart_case/front",
     "side": "biomechanics:block/heart_case/side"
   }

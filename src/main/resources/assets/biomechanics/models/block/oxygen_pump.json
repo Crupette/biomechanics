@@ -1,9 +1,11 @@
 {
   "parent": "minecraft:block/orientable",
   "textures": {
-    "top": "biomechanics:block/oxygen_pump/side",
-    "bottom": "biomechanics:block/oxygen_pump/side",
-    "side": "biomechanics:block/oxygen_pump/back",
+    "top": "biomechanics:block/oxygen_pump/top",
+    "bottom": "biomechanics:block/meat",
+    "east": "biomechanics:block/oxygen_pump/side_2",
+    "west": "biomechanics:block/oxygen_pump/side_1",
+    "south": "biomechanics:block/oxygen_pump/back",
     "front": "biomechanics:block/oxygen_pump/front"
   }
 }

@@ -239,7 +239,7 @@ public class MaceratorBlockEntity extends BlockEntity implements SidedInventory,
 
         ListTag spitList = new ListTag();
         this.spitStacks.forEach((stack) -> {
-            spitList.add(10, stack.toTag(new CompoundTag()));
+            spitList.add(0, stack.toTag(new CompoundTag()));
         });
         tag.put("spitList", spitList);
         tag.putInt("spitTimer", this.spitTimer);

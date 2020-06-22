@@ -7,6 +7,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.SkeletonEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
@@ -32,13 +33,19 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow public abstract boolean isMobOrPlayer();
 
+    @Shadow public abstract EntityGroup getGroup();
+
+    @Shadow public abstract LivingEntity getAttacker();
+
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
 
     @Inject(method = "drop", at = @At("TAIL"))
     private void dropOrgans(DamageSource source, CallbackInfo ci){
+        LivingEntity livingEntity = this.getAttacker().getAttacking();
         if(this.isUndead()) return;
+        if(livingEntity instanceof IronGolemEntity) return;
         Entity sourceEntity = source.getSource();
         if(!(sourceEntity instanceof PlayerEntity)){
             return;

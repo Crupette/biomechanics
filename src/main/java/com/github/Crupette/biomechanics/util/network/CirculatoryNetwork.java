@@ -47,11 +47,8 @@ public class CirculatoryNetwork {
     }
 
     public void reset(){
-        this.children.forEach((child) -> {
-            if(child != heart){
-                this.calorieStorageCapacity -= ((Biological)child).getCalorieStorageCapacity();
-            }
-        });
+        this.calorieStorageCapacity = this.heart.getCalorieStorageCapacity();
+
         this.children.clear();
         this.lungs.clear();
         this.children.add(this.heart);
@@ -163,6 +160,9 @@ public class CirculatoryNetwork {
         networkTag.putInt("storedCalories", this.calorieStorage);
         networkTag.putInt("overflowCalories", this.calorieOverflow);
 
+        networkTag.putInt("heartHealth", this.heartHealth);
+        networkTag.putInt("storedCaloriesMaximum", this.calorieStorageCapacity);
+
         tag.put("circulatorySystem",  networkTag);
     }
 
@@ -174,6 +174,9 @@ public class CirculatoryNetwork {
         this.bloodOxygen = networkTag.getInt("bloodOxygen");
         this.calorieStorage = networkTag.getInt("storedCalories");
         this.calorieOverflow = networkTag.getInt("overflowCalories");
+
+        this.heartHealth = networkTag.getInt("heartHealth");
+        this.calorieStorageCapacity = networkTag.getInt("storedCaloriesMaximum");
     }
 
     public int getCalorieStorage() { return this.calorieStorage; }
