@@ -36,7 +36,8 @@ public class BiomechanicsBlockEntities {
     public static final BlockEntityType<PhotosynthesizerBlockEntity> PHOTOSYNTHESIZER =
             BlockEntityType.Builder.create(PhotosynthesizerBlockEntity::new, new Block[]{BiomechanicsBlocks.PHOTOSYNTHESIZER}).build(null);
 
-
+    public static final BlockEntityType<FatStorageBlockEntity> FAT_STORAGE =
+            BlockEntityType.Builder.create(FatStorageBlockEntity::new, new Block[]{BiomechanicsBlocks.FAT_STORAGE}).build(null);
 
     public static void init(){
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("squeezer"), SQUEEZER);
@@ -51,6 +52,7 @@ public class BiomechanicsBlockEntities {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("macerator"), MACERATOR);
 
         Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("photosynthesizer"), PHOTOSYNTHESIZER);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, Biomechanics.identify("fat_storage"), FAT_STORAGE);
 
     }
 }

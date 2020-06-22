@@ -43,6 +43,7 @@ public class BiomechanicsBlocks {
     public static final Block BLOOD_VESSEL = new BloodVesselBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC)
             .sounds(BlockSoundGroup.HONEY)
             .strength(0.5f));
+
     public static final Block MACERATOR = new MaceratorBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC)
             .sounds(BlockSoundGroup.HONEY)
             .strength(0.5f));
@@ -55,6 +56,12 @@ public class BiomechanicsBlocks {
     public static final Block PHOTOSYNTHESIZER = new PhotosynthesizerBlock(FabricBlockSettings.of(Material.METAL)
             .requiresTool()
             .strength(3.5f)
+            .sounds(BlockSoundGroup.METAL));
+
+    public static final Block FAT_STORAGE = new FatStorageBlock(FabricBlockSettings.of(Material.METAL)
+            .requiresTool()
+            .strength(3.5f)
+            .nonOpaque()
             .sounds(BlockSoundGroup.METAL));
 
     private static void register(String name, Block block, Item.Settings settings){
@@ -75,5 +82,6 @@ public class BiomechanicsBlocks {
         register("fleshy_hopper", FLESHY_HOPPER, new Item.Settings().group(ItemGroup.REDSTONE));
 
         register("photosynthesizer", PHOTOSYNTHESIZER, new Item.Settings().group(ItemGroup.DECORATIONS));
+        register("fat_storage", FAT_STORAGE, new Item.Settings().group(ItemGroup.DECORATIONS));
     }
 }

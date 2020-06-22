@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "biomechanics:block/fat_storage"
+    }
+  }
+}

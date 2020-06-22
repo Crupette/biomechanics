@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "tag": "c:titanium_ores"
+    }
+  ],
+  "time": 500,
+  "result": {
+    "item": "c:titanium_dust",
+    "count": 2
+  }
+}

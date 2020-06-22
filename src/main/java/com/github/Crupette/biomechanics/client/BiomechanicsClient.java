@@ -1,6 +1,7 @@
 package com.github.Crupette.biomechanics.client;
 
 import com.github.Crupette.biomechanics.Biomechanics;
+import com.github.Crupette.biomechanics.client.block.BiomechanicsBlockRenderers;
 import com.github.Crupette.biomechanics.client.screen.*;
 import com.github.Crupette.biomechanics.screen.*;
 import net.fabricmc.api.ClientModInitializer;
@@ -27,5 +28,7 @@ public class BiomechanicsClient implements ClientModInitializer {
         ScreenRegistry.register(BiomechanicsScreenTypes.DIGESTOR, DigestorScreen::new);
 
         ScreenRegistry.register(BiomechanicsScreenTypes.BOILER, BoilerScreen::new);
+
+        BiomechanicsBlockRenderers.init();
     }
 }

@@ -1,0 +1,13 @@
+{
+  "type": "biomechanics:macerating",
+  "input": [
+    {
+      "item": "c:titanium_ingot"
+    }
+  ],
+  "time": 500,
+  "result": {
+    "item": "c:titanium_dust",
+    "count": 1
+  }
+}
