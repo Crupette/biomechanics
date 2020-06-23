@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.4.29'
 	id 'maven-publish'
 }
 
@@ -29,10 +29,7 @@ dependencies {
 
 	//modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:1.16-35.10-FABRIC:api"
 	modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:1.16-35.10-FABRIC"
-
-	modRuntime ("com.github.SuperCoder7979:databreaker:67716e92f6") {
-		exclude module : "fabric-loader"
-	}
+	include "vazkii.patchouli:Patchouli_1.16-fabric:1.16-35.10-FABRIC"
 }
 
 processResources {

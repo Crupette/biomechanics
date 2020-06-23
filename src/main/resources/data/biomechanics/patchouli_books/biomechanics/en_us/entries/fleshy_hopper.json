@@ -1,0 +1,19 @@
+{
+  "name": "Fleshy Hopper",
+  "icon": "biomechanics:fleshy_hopper",
+  "category": "biomechanics:machines",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:fleshy_hopper",
+      "title": "Fleshy Hopper",
+      "link_recipe": true,
+      "text": "Acts like a hopper, but allows blood to travel through it."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:fleshy_hopper",
+      "title": "Fleshy hopper crafting"
+    }
+  ]
+}

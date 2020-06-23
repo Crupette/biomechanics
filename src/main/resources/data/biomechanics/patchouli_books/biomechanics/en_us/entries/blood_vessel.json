@@ -1,0 +1,19 @@
+{
+  "name": "Blood Vessel",
+  "icon": "biomechanics:blood_vessel",
+  "category": "biomechanics:the_body",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:blood_vessel",
+      "title": "Blood Vessel",
+      "link_recipe": true,
+      "text": "Blood vessels work much like a stereotypical cable in any form of tech mod. The real difference between a cable and a blood vessel is that the network these build must create a closed loop originating from the heart case. It can be substituted for any other biologically networked machine or block."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:blood_vessel",
+      "title": "Blood vessel crafting"
+    }
+  ]
+}

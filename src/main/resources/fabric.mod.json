@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "biomechanics",
   "version": "${version}",
-  "name": "Bio Mechanics",
+  "name": "Biomechanics",
   "description": "Meat machines!",
   "authors": [
     "Crupette"

@@ -1,0 +1,19 @@
+{
+  "name": "Macerator",
+  "icon": "biomechanics:macerator",
+  "category": "biomechanics:machines",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:macerator",
+      "title": "Macerator",
+      "link_recipe": true,
+      "text": "Crushes ores into 2 dust. Simple ore doubling. Requires an empty space above it, and to be part of the circulatory network."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:macerator",
+      "title": "Macerator crafting"
+    }
+  ]
+}

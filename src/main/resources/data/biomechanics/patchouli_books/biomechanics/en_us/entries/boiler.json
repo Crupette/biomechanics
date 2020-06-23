@@ -1,0 +1,19 @@
+{
+  "name": "Boiler",
+  "icon": "biomechanics:boiler",
+  "category": "biomechanics:machines",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:boiler",
+      "title": "Boiler",
+      "link_recipe": true,
+      "text": "Behaves like a furnace, except it's fueled by calories and oxygen. Needs to be in the circulatory system"
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:boiler",
+      "title": "Boiler crafting"
+    }
+  ]
+}

@@ -22,6 +22,25 @@
     {
       "type": "text",
       "text": "$(l)Oxygen:$(br)$()The secondary resource that all organs require is oxygen. This resource is renewable, unlike calories, and can easily be retrieved through the lungs."
+    },
+    {
+      "type": "multiblock",
+      "name": "Example network",
+      "multiblock": {
+        "mapping": {
+          "B": "biomechanics:blood_vessel",
+          "0": "biomechanics:blood_vessel",
+          "H": "biomechanics:heart_case[facing=south]",
+          "O": "biomechanics:oxygen_pump[facing=south]",
+          "D": "biomechanics:digestor[facing=south]"
+        },
+        "pattern": [
+          [ "O", "D", "B" ],
+          [ "H", " ", "B" ],
+          [ "B", "0", "B" ]
+        ]
+      },
+      "text": "Notice how the system starts at the bottom and ends at the top. Although the network can be massive, it must always start and end at the heart case block."
     }
   ]
 }

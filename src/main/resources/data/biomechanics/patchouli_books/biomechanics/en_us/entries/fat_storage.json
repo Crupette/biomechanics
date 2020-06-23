@@ -1,0 +1,19 @@
+{
+  "name": "Fat Storage",
+  "icon": "biomechanics:fat_storage",
+  "category": "biomechanics:the_body",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:fat_storage",
+      "title": "Fat Storage",
+      "link_recipe": true,
+      "text": "Fat stores are the battery of the biological world. They store calories much more efficiently than any other biological component, and preserve these calories until they are truly needed. To use, substitute a blood vessel block with a fat storage block, and allow the system to build up fat."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:fat_storage",
+      "title": "Fat storage crafting"
+    }
+  ]
+}

@@ -29,7 +29,7 @@ public class FatStorageBlockEntity extends BlockEntity implements BiologicalNetw
 
     @Override
     public int getCalorieStorageCapacity() {
-        return 16384;
+        return 65535;
     }
 
     @Override

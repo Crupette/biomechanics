@@ -18,7 +18,7 @@ public class Biomechanics implements ModInitializer {
     public static Logger LOGGER = LogManager.getLogger();
 
     public static final String MOD_ID = "biomechanics";
-    public static final String MOD_NAME = "Bio Mechanics";
+    public static final String MOD_NAME = "Biomechanics";
 
     public static Identifier identify(String path) {
         return new Identifier(MOD_ID, path);

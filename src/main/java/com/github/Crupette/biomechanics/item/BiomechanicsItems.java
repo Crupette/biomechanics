@@ -12,8 +12,8 @@ public class BiomechanicsItems {
     public static Item LUNGS = new OrganItem(new Item.Settings().maxCount(1), "Lungs");
     public static Item SMALL_INTESTINE = new OrganItem(new Item.Settings().maxCount(1), "Small intestines");
 
-    public static Item DECAY_STABILIZER = new RandomlyDecayingItem(new Item.Settings().maxDamage(1024).group(ItemGroup.MISC));
-    public static Item BLOOD_BOTTLE = new Item(new Item.Settings().group(ItemGroup.MISC));
+    public static Item DECAY_STABILIZER = new RandomlyDecayingItem(new Item.Settings().maxDamage(1024).group(BiomechanicsItemGroup.BIOMECHANICS));
+    public static Item BLOOD_BOTTLE = new Item(new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
 
     public static Item SCALPEL = new SwordItem(ToolMaterials.IRON, 0, -1.5f, new Item.Settings().group(ItemGroup.COMBAT).maxDamage(256));
 

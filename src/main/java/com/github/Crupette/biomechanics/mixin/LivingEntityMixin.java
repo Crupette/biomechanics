@@ -25,15 +25,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
-    @Shadow @Final public int defaultMaxHealth;
-
     @Shadow public abstract float getMaxHealth();
 
     @Shadow public abstract boolean isUndead();
 
     @Shadow public abstract boolean isMobOrPlayer();
-
-    @Shadow public abstract EntityGroup getGroup();
 
     @Shadow public abstract LivingEntity getAttacker();
 
@@ -45,9 +41,11 @@ public abstract class LivingEntityMixin extends Entity {
     private void dropOrgans(DamageSource source, CallbackInfo ci){
         if(this.getAttacker() == null) return;
         if(this.getAttacker().getAttacking() == null) return;
+
         LivingEntity livingEntity = this.getAttacker().getAttacking();
         if(this.isUndead()) return;
         if(livingEntity instanceof IronGolemEntity) return;
+
         Entity sourceEntity = source.getSource();
         if(!(sourceEntity instanceof PlayerEntity)){
             return;

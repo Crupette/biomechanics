@@ -214,6 +214,15 @@
     "block.biomechanics.boiler": "Boiler",
     "block.biomechanics.fleshy_hopper": "Fleshy Hopper",
     "block.biomechanics.photosynthesizer": "Photosynthesizer",
+    "block.biomechanics.fat_storage": "Fat Storage",
 
-    "tooltip.biomechanics.organ_health": "Health:"
+    "container.biomechanics.squeezer": "Squeezer",
+    "container.biomechanics.heart_case": "Heart Case",
+    "container.biomechanics.oxygen_pump": "Oxygen Pump",
+    "container.biomechanics.digestor": "Digestor",
+    "container.biomechanics.boiler": "Boiler",
+
+    "tooltip.biomechanics.organ_health": "Health:",
+
+    "itemGroup.biomechanics.items": "Biomechanics"
 }

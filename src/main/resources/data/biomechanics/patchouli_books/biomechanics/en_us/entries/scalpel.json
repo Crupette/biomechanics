@@ -1,0 +1,19 @@
+{
+  "name": "Scalpel",
+  "icon": "biomechanics:scalpel",
+  "category": "biomechanics:beginning",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:scalpel",
+      "title": "Scalpel",
+      "link_recipe": true,
+      "text": "Allows you to extract organs from mobs. hold in the offhand or attack in the mainhand to get organs."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:scalpel",
+      "title": "Scalpel crafting"
+    }
+  ]
+}

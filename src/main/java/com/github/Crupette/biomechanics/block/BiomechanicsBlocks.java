@@ -2,6 +2,7 @@ package com.github.Crupette.biomechanics.block;
 
 import com.github.Crupette.biomechanics.Biomechanics;
 import com.github.Crupette.biomechanics.block.entity.MaceratorBlockEntity;
+import com.github.Crupette.biomechanics.item.BiomechanicsItemGroup;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
@@ -70,18 +71,18 @@ public class BiomechanicsBlocks {
     }
 
     public static void init(){
-        register("squeezer", SQUEEZER, new Item.Settings().group(ItemGroup.DECORATIONS));
-        register("heart_case", HEART_CASE, new Item.Settings().group(ItemGroup.DECORATIONS));
-        register("oxygen_pump", OXYGEN_PUMP, new Item.Settings().group(ItemGroup.DECORATIONS));
-        register("digestor", DIGESTOR, new Item.Settings().group(ItemGroup.DECORATIONS));
-        register("boiler", BOILER, new Item.Settings().group(ItemGroup.DECORATIONS));
+        register("squeezer", SQUEEZER, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
+        register("heart_case", HEART_CASE, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
+        register("oxygen_pump", OXYGEN_PUMP, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
+        register("digestor", DIGESTOR, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
+        register("boiler", BOILER, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
 
-        register("macerator", MACERATOR, new Item.Settings().group(ItemGroup.DECORATIONS));
+        register("macerator", MACERATOR, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
 
-        register("blood_vessel", BLOOD_VESSEL, new Item.Settings().group(ItemGroup.DECORATIONS));
+        register("blood_vessel", BLOOD_VESSEL, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
         register("fleshy_hopper", FLESHY_HOPPER, new Item.Settings().group(ItemGroup.REDSTONE));
 
-        register("photosynthesizer", PHOTOSYNTHESIZER, new Item.Settings().group(ItemGroup.DECORATIONS));
-        register("fat_storage", FAT_STORAGE, new Item.Settings().group(ItemGroup.DECORATIONS));
+        register("photosynthesizer", PHOTOSYNTHESIZER, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
+        register("fat_storage", FAT_STORAGE, new Item.Settings().group(BiomechanicsItemGroup.BIOMECHANICS));
     }
 }

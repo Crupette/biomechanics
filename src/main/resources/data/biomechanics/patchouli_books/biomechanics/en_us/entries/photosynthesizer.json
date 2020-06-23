@@ -1,0 +1,19 @@
+{
+  "name": "Photosynthesis",
+  "icon": "biomechanics:photosynthesizer",
+  "category": "biomechanics:the_body",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:photosynthesizer",
+      "title": "Photosynthesis",
+      "link_recpie": false,
+      "text": "An alternative to the digestor. It creates calories from the sun instead of food. Requires light."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:photosynthesizer",
+      "title": ""
+    }
+  ]
+}

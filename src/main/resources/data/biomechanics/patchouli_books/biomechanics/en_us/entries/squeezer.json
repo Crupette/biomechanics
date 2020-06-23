@@ -1,0 +1,19 @@
+{
+  "name": "Squeezer",
+  "icon": "biomechanics:squeezer",
+  "category": "biomechanics:beginning",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "biomechanics:squeezer",
+      "title": "Squeezer",
+      "link_recipe": true,
+      "text": "Uses coal to crush biological materials into blood. Takes any form of meat, and creates blood. Needs a glass bottle to catch the blood"
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:squeezer",
+      "title": "Squeezer crafting"
+    }
+  ]
+}
