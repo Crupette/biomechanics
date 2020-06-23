@@ -1,0 +1,30 @@
+{
+  "name": "The Lungs",
+  "icon": "biomechanics:lungs",
+  "category": "biomechanics:the_body",
+  "pages": [
+    {
+      "type": "text",
+      "text": "The lungs are an essential part to any body. They provide oxygen so that biological components can metabolize calories. It's blood-oxygen concentration is independent of blood-calorie concentration. It can be connected to the circulatory system in any place, as long as it has one input and one output line"
+    },
+    {
+      "type": "spotlight",
+      "item": "biomechanics:lungs",
+      "title": "Lungs",
+      "link_recpie": false,
+      "text": "Lungs are dropped from living entities when killed with a scalpel in either the off-hand or main-hand. It's health is determined by the maximum health of the parent entity. Elder guardians are pretty good for a late-game oxygen solution."
+    },
+    {
+      "type": "spotlight",
+      "item": "biomechanics:oxygen_pump",
+      "title": "Oxygen Pump",
+      "link_recipe": true,
+      "text": "Required to allow the lungs to breathe. It's reflex is triggered by a low concentration of oxygen in the blood stream."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:oxygen_pump",
+      "title": "Oxygen Pump crafting"
+    }
+  ]
+}

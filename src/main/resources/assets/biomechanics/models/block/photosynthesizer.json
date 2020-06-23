@@ -3,10 +3,10 @@
   "textures": {
     "particle": "biomechanics:block/photosynthesizer/top",
     "up": "biomechanics:block/photosynthesizer/top",
-    "down": "minecraft:block/iron_block",
-    "north": "minecraft:block/iron_block",
-    "south": "minecraft:block/iron_block",
-    "east": "minecraft:block/iron_block",
-    "west": "minecraft:block/iron_block"
+    "down": "biomechanics:block/meat",
+    "north": "biomechanics:block/boiler/side",
+    "south": "biomechanics:block/boiler/side",
+    "east": "biomechanics:block/boiler/side",
+    "west": "biomechanics:block/boiler/side"
   }
 }

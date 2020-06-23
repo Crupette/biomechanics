@@ -48,7 +48,7 @@ public class BiomechanicsBlocks {
             .sounds(BlockSoundGroup.HONEY)
             .strength(0.5f));
 
-    public static final Block FLESHY_HOPPER = new FleshyHopperBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC)
+    public static final Block FLESHY_HOPPER = new FleshyHopperBlock(FabricBlockSettings.of(Material.METAL)
             .requiresTool()
             .strength(3.f, 4.8f)
             .sounds(BlockSoundGroup.HONEY));

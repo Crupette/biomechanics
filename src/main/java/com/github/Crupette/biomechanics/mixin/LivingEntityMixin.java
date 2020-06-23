@@ -43,6 +43,8 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "drop", at = @At("TAIL"))
     private void dropOrgans(DamageSource source, CallbackInfo ci){
+        if(this.getAttacker() == null) return;
+        if(this.getAttacker().getAttacking() == null) return;
         LivingEntity livingEntity = this.getAttacker().getAttacking();
         if(this.isUndead()) return;
         if(livingEntity instanceof IronGolemEntity) return;

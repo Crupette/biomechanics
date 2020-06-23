@@ -1,0 +1,30 @@
+{
+  "name": "The Heart",
+  "icon": "biomechanics:heart",
+  "category": "biomechanics:the_body",
+  "pages": [
+    {
+      "type": "text",
+      "text": "The heart is the central hub for calorie and oxygen transmission. Every beat passes calories and oxygen in concentrations relative to the heart's health value. To fully utilize the heart, connections are required to the top and bottom of the heart case. These connections must be connected in some way to form a closed loop, a circulatory system."
+    },
+    {
+      "type": "spotlight",
+      "item": "biomechanics:heart",
+      "title": "Heart",
+      "link_recpie": false,
+      "text": "Hearts are dropped from living entities when killed with a scalpel in either the off-hand or main-hand. It's health is determined by the maximum health of the parent entity. Try to kill the Ender Dragon with a scalpel!"
+    },
+    {
+      "type": "spotlight",
+      "item": "biomechanics:heart_case",
+      "title": "Heart Case",
+      "link_recipe": true,
+      "text": "Required to pump blood to other biological components. The maximum saturation of this blood is determined directly by the health of the heart placed inside."
+    },
+    {
+      "type": "crafting",
+      "recipe": "biomechanics:heart_case",
+      "title": "Heart Case crafting"
+    }
+  ]
+}

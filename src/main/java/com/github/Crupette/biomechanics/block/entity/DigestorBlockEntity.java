@@ -401,7 +401,7 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
         tag.putInt("processingCalories", this.processingCalories);
         tag.putInt("processingMaximum", this.processingMaximum);
 
-        this.network.toTag(tag);
+        if(this.network != null) this.network.toTag(tag);
         return tag;
     }
 }

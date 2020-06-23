@@ -63,13 +63,13 @@ public class CirculatoryNetwork {
         if(this.calorieOverflow > 0){
             int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieOverflow) - this.bloodCalories;
             if(transfer < 0) return;
-            this.bloodCalories += transfer;
-            this.calorieOverflow -= transfer;
+            this.bloodCalories += transfer / 2;
+            this.calorieOverflow -= transfer / 2;
         }else {
             int transfer = Math.min(this.BLOOD_CALORIE_MAX_SATURATION * this.heartHealth, this.calorieStorage) - this.bloodCalories;
             if(transfer < 0) return;
-            this.bloodCalories += transfer;
-            this.calorieStorage -= transfer;
+            this.bloodCalories += transfer / 2;
+            this.calorieStorage -= transfer / 2;
         }
 
         //Make sure no weird underflow happens
