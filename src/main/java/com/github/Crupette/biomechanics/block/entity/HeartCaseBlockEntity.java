@@ -308,11 +308,11 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
                     if(heartAttack) efficiency /= 10;
                     if(sustainCalories >= 4 && sustainOxygen >= 2) {
                         this.network.onBeat(efficiency);
-                        this.beatTick = (short) (efficiency / 2);
+                        this.beatTick = 5;
                         this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.4f, 0.5f);
                     }else{
                         this.network.onBeat(efficiency / 2);
-                        this.beatTick += (short) (efficiency / 2);
+                        this.beatTick += 20;
                         this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.6f, 0.5f);
                     }
                 }

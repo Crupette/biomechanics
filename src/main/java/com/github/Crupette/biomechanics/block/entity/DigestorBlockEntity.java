@@ -308,7 +308,7 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
                         this.processingCalories +=
                                 foodStack.getItem().getFoodComponent().getHunger() *
                                 foodStack.getItem().getFoodComponent().getSaturationModifier() *
-                                2500;
+                                4000;
                         this.processingMaximum = this.processingCalories;
                         foodStack.decrement(1);
                     }else{
