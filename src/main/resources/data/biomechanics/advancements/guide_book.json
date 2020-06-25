@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "guide_book": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "biomechanics:meats"
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "loot": [
+      "biomechanics:guide_book"
+    ]
+  }
+}
