@@ -170,6 +170,11 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
         ItemStack itemStack = this.inventory.get(slot);
         boolean bl = !stack.isEmpty() && stack.isItemEqualIgnoreDamage(itemStack) && ItemStack.areTagsEqual(stack, itemStack);
         this.inventory.set(slot, stack);
+        if(slot == 0){
+            this.heartAttack = false;
+            this.beatTick = 0;
+            this.requestsBeat = false;
+        }
         if (stack.getCount() > this.getMaxCountPerStack()) {
             stack.setCount(this.getMaxCountPerStack());
         }
@@ -243,7 +248,7 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
             int invincibleTicks = organStack.getOrCreateTag().getInt("invincibleTicks");
             int health = organStack.getOrCreateTag().getInt("health");
 
-            if((int)(Math.random() * 10) == 1)suffocationTicks++;
+            suffocationTicks++;
             if(suffocationTicks > 20){
                 suffocationTicks = 20;
             }
@@ -260,6 +265,7 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
     @Override
     public void tick() {
         boolean dirty = false;
+
         if(this.needsTree){
             this.needsTree = false;
             this.updateConnectionTree();
@@ -268,7 +274,7 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
         if(!world.isClient){
             ItemStack heartStack = this.inventory.get(0);
 
-            if(!heartStack.isEmpty() && this.depletedBottles == this.depletedBottlesNeeded && this.saturatedBottles == this.saturatedBottlesNeeded) {
+            if(!heartStack.isEmpty()) {
                 ItemStack organStack = this.inventory.get(0);
 
                 int heartHealth = organStack.getOrCreateTag().getInt("health");
@@ -292,32 +298,29 @@ public class HeartCaseBlockEntity extends BlockEntity implements ExtendedScreenH
                     this.requestsBeat = true;
                 }
 
-                if((this.requestsBeat) ){
+                if(this.requestsBeat && !this.heartAttack){
                     sustainOxygen = this.network.requestOxygen(4);
                     sustainCalories = this.network.requestCalories(2);
+
                     this.requestsBeat = false;
 
-                    if(this.beatTick > heartHealth * 2){
+                    if(this.beatTick > heartHealth * 2 && this.inventory.get(1).isEmpty()){
                         this.heartAttack = true;
                     }
-                    int efficiency = heartHealth;
                     int haChance = (int)((float)this.network.getCalorieOverflow() / 10000);
                     if(haChance > 0){
                         if(Math.random() * 100 > haChance) this.heartAttack = true;
                     }
-                    if(heartAttack) efficiency /= 10;
                     if(sustainCalories >= 4 && sustainOxygen >= 2) {
-                        this.network.onBeat(efficiency);
+                        this.network.onBeat(heartHealth);
                         this.beatTick = 5;
                         this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.4f, 0.5f);
                     }else{
-                        this.network.onBeat(efficiency / 2);
+                        this.network.onBeat(heartHealth / 2);
                         this.beatTick += 20;
                         this.world.playSound(null, this.pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 0.6f, 0.5f);
                     }
                 }
-            }else{
-                this.heartAttack = false;
             }
 
             for(int slot = 2; slot < 4; slot++){

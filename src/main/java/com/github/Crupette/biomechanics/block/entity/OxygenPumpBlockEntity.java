@@ -216,7 +216,7 @@ public class OxygenPumpBlockEntity extends BlockEntity implements ExtendedScreen
             int invincibleTicks = organStack.getOrCreateTag().getInt("invincibleTicks");
             int health = organStack.getOrCreateTag().getInt("health");
 
-            if((int)(Math.random() * 10) == 1)suffocationTicks++;
+            suffocationTicks++;
             if(suffocationTicks > 20){
                 suffocationTicks = 20;
             }
@@ -253,16 +253,16 @@ public class OxygenPumpBlockEntity extends BlockEntity implements ExtendedScreen
                     healOrgan();
                 }
 
-                if(this.storedOxygen < 100 && this.breathDelay == 0){
+                if(this.storedOxygen < 100 || this.network.getBloodOxygen() < this.network.getHeartHealth() * 5){
                     this.needsBreath = true;
                 }
 
-                if(this.needsBreath){
+                if(this.needsBreath && breathDelay == 0){
                     sustainOxygen = this.network.requestOxygen(2);
                     sustainCalories = this.network.requestCalories(2);
 
                     if(health <= 1) health = 2;
-                    float efficiency = (((float)(sustainCalories) + (float)(sustainOxygen) + 1) / 5.f) * (1.f - (breathDelay / (health)));
+                    float efficiency = (((float)(sustainCalories) + (float)(sustainOxygen) + 1) / 5.f);
 
                     this.needsBreath = false;
                     this.storedOxygen = (int) ((health * 80) * efficiency);

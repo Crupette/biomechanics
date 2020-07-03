@@ -232,7 +232,7 @@ public class DigestorBlockEntity extends BlockEntity implements ExtendedScreenHa
             int invincibleTicks = organStack.getOrCreateTag().getInt("invincibleTicks");
             int health = organStack.getOrCreateTag().getInt("health");
 
-            if((int)(Math.random() * 10) == 1)suffocationTicks++;
+            suffocationTicks++;
             if(suffocationTicks > 20){
                 suffocationTicks = 20;
             }
